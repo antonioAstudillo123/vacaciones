@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('empleados', function (Blueprint $table) {
             $table->id();
-            $table->string('numeroEmpleado')->null();
-            $table->string('colaborador')->null();
-            $table->string('fechaIngreso')->null();
-            $table->unsignedBigInteger('idPlantel')->null();
-            $table->unsignedBigInteger('idPuesto')->null();
-            $table->unsignedBigInteger('idArea')->null();
-            $table->unsignedBigInteger('idJefe')->null();
-            $table->unsignedBigInteger('idUser')->null();
-            $table->string('correo')->null();
+            $table->string('numeroEmpleado')->nullable();
+            $table->string('colaborador')->nullable();
+            $table->string('fechaIngreso')->nullable();
+            $table->unsignedBigInteger('idPlantel')->nullable();
+            $table->unsignedBigInteger('idPuesto')->nullable();
+            $table->unsignedBigInteger('idArea')->nullable();
+            $table->unsignedBigInteger('idJefe')->nullable();
+            $table->unsignedBigInteger('idUser')->nullable();
+            $table->string('correo')->nullable();
             $table->boolean('estatus');
 
             $table->foreign('idPlantel')->references('id')->on('planteles');

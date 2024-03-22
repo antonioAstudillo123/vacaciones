@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('puestos', function (Blueprint $table) {
+        Schema::create('solicitud_vacaciones_detalle', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->null();
+            $table->unsignedBigInteger('id_solicitud');
+            $table->string('fecha');
             $table->boolean('estatus');
             $table->timestamps();
         });
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('puestos');
+        Schema::dropIfExists('solicitud_vacaciones_detalle');
     }
 };

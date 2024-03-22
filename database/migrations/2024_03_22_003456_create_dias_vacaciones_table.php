@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('puestos', function (Blueprint $table) {
+        Schema::create('dias_vacaciones', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->null();
+            $table->string('dias');
+            $table->string('anios');
             $table->boolean('estatus');
             $table->timestamps();
         });
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('puestos');
+        Schema::dropIfExists('dias_vacaciones');
     }
 };

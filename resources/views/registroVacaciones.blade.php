@@ -6,8 +6,8 @@
 
 @section('contenido')
     <!-- Main content -->
-    <section class="content mt-5">
-      <div class="container p-5">
+    <section class="content mt-2">
+      <div class="container p-2">
         <div class="row">
             <div class="col-md-4">
                 <div class="sticky-top mb-3">
@@ -42,6 +42,19 @@
         <!-- /.row -->
       </div><!-- /.container-fluid -->
     </section>
+
+    <div class="container mb-2 p-3">
+        <div class="d-flex justify-content-center">
+            <div class="">
+                <button id="btnSolicitar" class="btn btn-primary">Solicitar vacaciones</button>
+                <button id="btnSolicitarSpinner" class="btn btn-primary d-none" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="visually-hidden">Procesando...</span>
+                  </button>
+
+            </div>
+        </div>
+    </div>
     <!-- /.content -->
 @endsection
 
@@ -51,6 +64,6 @@
    <script src="{{ asset('js/moments/moment.min.js') }}"></script>
    <script src="{{ asset('js/fullcalendar/locales/es.js') }}"></script>
    <script src="{{ asset('js/fullcalendar/locales-all.js') }}"></script>
-   <script src="{{ asset('js/pages/registroVacaciones/app.js') }}"></script>
+   <script type="module" src="{{ asset('js/pages/registroVacaciones/app.js') }}"></script>
 
 @endsection

@@ -9,7 +9,7 @@
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="../index.html" class="nav-link">
+        <a href="{{ route('registroVacaciones.index') }}" class="nav-link">
           <i class="far fa-circle nav-icon text-primary"></i>
           <p>Solicitar vacaciones</p>
         </a>

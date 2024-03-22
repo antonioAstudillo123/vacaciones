@@ -1,3 +1,7 @@
+import {peticionSolicitudVacaciones} from '../../ajax.js';
+import { mensajeAlert } from '../../auxiliares.js';
+
+
 $(function () {
 
     var Calendar = FullCalendar.Calendar;
@@ -45,5 +49,34 @@ $(function () {
     });
 
     calendar.render();
+
+
+    /**
+     * Evento de btn solicitar vacaciones
+     */
+
+    document.getElementById('btnSolicitar').addEventListener('click',function(e){
+        let eventosEnDia = calendar.getEvents();
+        let auxArray = [];
+
+        //Ocultamos boton de solicitar vacaciones
+        e.target.classList.add('d-none');
+
+        //Mostraos boton de spinner
+        document.getElementById('btnSolicitarSpinner').classList.remove('d-none');
+
+        //Deshabilitamos el draggable
+        document.querySelector('.external-event').classList.add('disabled');
+
+        eventosEnDia.forEach(function(evento) {
+            auxArray.push(evento.start.toISOString().split('T')[0]);
+         });
+
+
+
+         peticionSolicitudVacaciones('/colaboradores/registroVacaciones' , 'post' , {data:auxArray});
+
+        // console.log(auxArray);
+    });
 
   })

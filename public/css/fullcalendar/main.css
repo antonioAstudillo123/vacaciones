@@ -1465,3 +1465,7 @@ A VERTICAL event
     color: inherit; /* natural color for navlinks */
   }
 
+  .disabled {
+    pointer-events: none; /* Hace que el elemento no sea clickeable */
+    opacity: 0.5; /* Reduce la opacidad para indicar visualmente que está deshabilitado */
+  }

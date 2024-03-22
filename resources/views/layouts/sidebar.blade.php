@@ -14,7 +14,7 @@
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="User Image" class="img-circle elevation-2">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Antonio Astudillo</a>
+          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
         </div>
       </div>
 

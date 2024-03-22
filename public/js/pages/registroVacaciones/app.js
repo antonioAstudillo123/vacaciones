@@ -59,24 +59,27 @@ $(function () {
         let eventosEnDia = calendar.getEvents();
         let auxArray = [];
 
-        //Ocultamos boton de solicitar vacaciones
-        e.target.classList.add('d-none');
+        if(eventosEnDia.length === 0)
+        {
+            mensajeAlert('Error!' , 'Selecciona los días de forma correcta!' , 'error');
+        }else{
+             //Ocultamos boton de solicitar vacaciones
+            e.target.classList.add('d-none');
 
-        //Mostraos boton de spinner
-        document.getElementById('btnSolicitarSpinner').classList.remove('d-none');
+            //Mostraos boton de spinner
+            document.getElementById('btnSolicitarSpinner').classList.remove('d-none');
 
-        //Deshabilitamos el draggable
-        document.querySelector('.external-event').classList.add('disabled');
+            //Deshabilitamos el draggable
+            document.querySelector('.external-event').classList.add('disabled');
 
-        eventosEnDia.forEach(function(evento) {
-            auxArray.push(evento.start.toISOString().split('T')[0]);
-         });
+            eventosEnDia.forEach(function(evento) {
+                auxArray.push(evento.start.toISOString().split('T')[0]);
+            });
 
+            peticionSolicitudVacaciones('/colaboradores/registroVacaciones' , 'post' , {data:auxArray});
 
+        }
 
-         peticionSolicitudVacaciones('/colaboradores/registroVacaciones' , 'post' , {data:auxArray});
-
-        // console.log(auxArray);
     });
 
   })

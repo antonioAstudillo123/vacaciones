@@ -19,12 +19,27 @@ export function peticionSolicitudVacaciones(url , tipo , data)
             success: function(response)
             {
                 console.log(response);
-                mensajeAlert('Buen trabajo!' , 'Las vacaciones fueron solicitadas con éxito!' , 'success')
+                Swal.fire({
+                    title: 'Buen trabajo!',
+                    text: 'Las vacaciones fueron solicitadas con éxito!',
+                    icon: 'success'
+                  }).then(()=>{
+                    location.reload();
+                  });
 
             },
             error: function(error)
             {
-                console.log(error);
+
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+                document.getElementById('btnSolicitar').classList.remove('d-none');
+
+                //Mostraos boton de spinner
+                document.getElementById('btnSolicitarSpinner').classList.add('d-none');
+
+                //Deshabilitamos el draggable
+                document.querySelector('.external-event').classList.remove('disabled');
+
             }
         });
 }

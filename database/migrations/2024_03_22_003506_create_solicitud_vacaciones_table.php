@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('fecha');
             $table->integer('dias')->nullable();
             $table->text('observaciones')->nullable();
-            $table->char('estatus' , 5);
+            $table->string('estatus'); //Aprobada - Pendiente - Cancelada
             $table->timestamps();
 
             $table->foreign('id_empleado')->references('id')->on('empleados');

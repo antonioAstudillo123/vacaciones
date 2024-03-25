@@ -18,8 +18,7 @@
 
         @else
                 <!-- Main content -->
-            <section class="content mt-2">
-                <div class="container p-2">
+            <section class="content p-3">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="sticky-top mb-3">
@@ -52,10 +51,9 @@
                         <!-- /.col -->
                     </div>
                 <!-- /.row -->
-                </div><!-- /.container-fluid -->
       </section>
 
-      <div class="container mb-2 p-3">
+      <div class="container p-3">
           <div class="d-flex justify-content-center">
               <div class="">
                   <button id="btnSolicitar" class="btn btn-primary">Solicitar vacaciones</button>
@@ -79,6 +77,9 @@
    <script src="{{ asset('js/moments/moment.min.js') }}"></script>
    <script src="{{ asset('js/fullcalendar/locales/es.js') }}"></script>
    <script src="{{ asset('js/fullcalendar/locales-all.js') }}"></script>
-   <script type="module" src="{{ asset('js/pages/registroVacaciones/app.js') }}"></script>
+
+   @if(!$bandera)
+    <script type="module" src="{{ asset('js/pages/registroVacaciones/app.js') }}"></script>
+   @endif
 
 @endsection

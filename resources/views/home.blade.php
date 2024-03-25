@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('tituloPagina' , 'Univer')
+
 @section('contenido')
 <div class="container mt-4">
  <!-- Main content -->

@@ -78,7 +78,7 @@ class RegistroVacaciones extends Controller
         }
 
 
-       return view('registroVacaciones' , ['bandera' => $bandera , 'mensaje' => $mensaje]);
+       return view('dashboard.colaboradores.submodulos.registroVacaciones' , ['bandera' => $bandera , 'mensaje' => $mensaje]);
     }
 
 

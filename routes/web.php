@@ -20,6 +20,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/colaboradores/gestionarSolicitudes' , 'index')->name('gestionarSolicitudes.index');
         Route::get('/colaboradores/getSolicitudes' , 'getSolicitudes');
         Route::post('/colaboradores/getSolicitudUser' , 'getSolicitudUser');
+        Route::post('/colaboradores/aprobarSolicitud' , 'aprobarSolicitud');
+        Route::post('/colaboradores/rechazarSolicitud' , 'rechazarSolicitud');
     });
 });
 

@@ -43,3 +43,43 @@ export function peticionSolicitudVacaciones(url , tipo , data)
             }
         });
 }
+
+
+//En este metodo voy a actualizar el estatus de una Solicitud a aprobada
+export function peticionActualizacionEstatus(data , url)
+{
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+    });
+
+    $.ajax({
+            type: 'POST',
+            url: url,
+            data:data,
+            success: function(response)
+            {
+                Swal.fire({
+                    title: 'Buen trabajo!',
+                    text: response,
+                    icon: 'success'
+                  }).then(()=>{
+
+                    if(document.getElementById('formRechazoSolicitud') !== null)
+                    {
+                        document.getElementById('formRechazoSolicitud').reset();
+                    }
+                    $("#tablaSolicitudes").DataTable().ajax.reload();
+                  });
+
+            },
+            error: function(error)
+            {
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+            }
+        });
+}

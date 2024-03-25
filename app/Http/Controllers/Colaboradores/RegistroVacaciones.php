@@ -68,7 +68,7 @@ class RegistroVacaciones extends Controller
             $mensaje = 'Lo sentimos, actualmente no cumples con el requisito mínimo de un año de servicio para solicitar vacaciones. Por favor, ten en cuenta que debes completar al menos un año de servicio antes de poder generar una solicitud de vacaciones. Si tienes alguna pregunta o necesitas más información, por favor contacta a Recursos Humanos o a tu jefe inmediato.';
         }
         //Comprobamos si el usuario no tiene una solicitud pendiente en estado de revision
-        else if (DB::table($this->tablaSolicitudes)->where('id_empleado', $empleado[0]->id)->where('estatus' , '=' , '1')->exists()) {
+        else if (DB::table($this->tablaSolicitudes)->where('id_empleado', $empleado[0]->id)->where('estatus' , '=' , 'Pendiente')->exists()) {
             $bandera = true;
             $mensaje = 'Tu solicitud de vacaciones se encuentra actualmente en proceso de revisión. Por favor, ten en cuenta que no podrás generar otra solicitud hasta que esta sea completada. Si tienes alguna pregunta o necesitas asistencia, por favor contacta a Recursos Humanos o a tu jefe inmediato.';
         //Debemos comprobar si el usuario aun no sobrepasa el limite de días que puede pedir de vacaciones
@@ -119,7 +119,7 @@ class RegistroVacaciones extends Controller
                             'fecha' => Carbon::now()->format('Y-m-d H:i:s'),
                             'dias' => $diasPedidos,
                             'observaciones' => null,
-                            'estatus' => '1',
+                            'estatus' => 'Pendiente',
                             'created_at' => Carbon::now(),
                         ]
                     );
@@ -166,6 +166,7 @@ class RegistroVacaciones extends Controller
         $totalDias = DB::table('solicitud_vacaciones')
             ->where('id_empleado', '=', $idEmpleado)
             ->whereYear('fecha', '=', $anioActual)
+            ->where('estatus', '=' , 'Aprobada')
             ->sum('dias');
 
             $resultado = DB::table('dias_vacaciones')
@@ -186,6 +187,7 @@ class RegistroVacaciones extends Controller
         $totalDias = DB::table($this->tablaSolicitudes)
             ->where('id_empleado', '=', $idEmpleado)
             ->whereYear('fecha', '=', $anioActual)
+            ->where('estatus', '=' , 'Aprobada')
             ->sum('dias');
 
         //Sumamos la cantidad de días que pidio el usuario, con el total de días que ya tiene en este año
@@ -208,7 +210,7 @@ class RegistroVacaciones extends Controller
             ->where('anios', '=', $diffYears)
             ->get();
 
-        return ($totalDias < $resultado[0]->dias) ? true : false;
+        return ($totalDias <= $resultado[0]->dias) ? true : false;
 
     }
 

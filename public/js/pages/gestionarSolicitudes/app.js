@@ -1,11 +1,17 @@
+import {peticionActualizacionEstatus} from '../../ajax.js';
+import { mensajeAlert } from "../../auxiliares.js";
+
 window.onload = main;
 
 function main()
 {
+    //Activamos eventos en el DOM
+    eventos();
+
     const tabla = datatable();
 
-     //Le añadimos eventos al datatable
-     obtener_data("#tablaSolicitudes" , tabla);
+    //Le añadimos eventos al datatable
+    obtener_data("#tablaSolicitudes" , tabla);
 }
 
 function datatable()
@@ -35,7 +41,7 @@ function datatable()
             {
                 defaultContent: `
                     <div class='container d-flex justify-content-center'>
-                        <button class='fechas btn btn-warning btn-sm mr-2' data-bs-toggle="tooltip"
+                        <button class='fechas btn btn-secondary btn-sm mr-2' data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Visualizar fechas">
                             <i class="fas fa-calendar"></i>
                         </button>
@@ -44,7 +50,7 @@ function datatable()
                             <i class="fas fa-thumbs-up"></i>
                         </button>
                         <button class='cancelaciones btn btn-danger btn-sm mr-2' data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Cancelar solicitud">
+                            data-bs-placement="top" title="Rechazar solicitud">
                             <i class="fas fa-thumbs-down"></i>
                         </button>
                     </div> `,
@@ -55,16 +61,16 @@ function datatable()
             switch(data.estatus)
             {
                 case 'Pendiente':
-                    $(cells[4]).addClass('bg-primary text-center');
+                    $(cells[4]).addClass('bg-primary text-center font-weight-bold');
                 break;
                 case 'Aprobada':
-                    $(cells[4]).addClass('bg-success text-center');
+                    $(cells[4]).addClass('bg-success text-center font-weight-bold');
                 break;
                 case 'Cancelada':
-                    $(cells[4]).addClass('bg-danger text-center');
+                    $(cells[4]).addClass('bg-danger text-center font-weight-bold');
                 break;
                 default:
-                    $(cells[4]).addClass('bg-danger text-center');
+                    $(cells[4]).addClass('bg-danger text-center font-weight-bold');
                 break;
             }
         },
@@ -104,10 +110,38 @@ function obtener_data(tbody, tabla)
     });
 
 
-    $(tbody).on("click", "button.eliminar", function () {
+    $(tbody).on("click", "button.cancelaciones", function () {
         data = tabla.row($(this).closest("tr")).data();
-        $('#deleteRegistro').modal('show');
-        document.getElementById('btnConfirmacion').value = data.id;
+
+        if(data.estatus === 'Aprobada')
+        {
+            mensajeAlert('Error' , 'Esta solicitud ya fue aprobada, no puedes cancelarla!' , 'error');
+        }else if(data.estatus === 'Rechazada'){
+            mensajeAlert('Error' , 'Esta solicitud ya fue rechazada!' , 'error');
+        }
+        else{
+            $('#modalRechazarSolicitud').modal('show');
+            document.getElementById('idSolicitudRechazo').value = data.id;
+            document.getElementById('colaboradorInputModal').value = data.colaborador;
+        }
+    });
+
+
+    $(tbody).on("click", "button.aprobaciones", function () {
+        data = tabla.row($(this).closest("tr")).data();
+
+        if(data.estatus === 'Aprobada')
+        {
+            mensajeAlert('Error' , 'Esta solicitud ya fue aprobada!' , 'error');
+        }else if(data.estatus === 'Rechazada'){
+            mensajeAlert('Error' , 'Esta solicitud fue rechazada, no se puede aprobar!' , 'error');
+        }
+        else{
+            $('#modalAprobarSolicitud').modal('show');
+            document.getElementById('btnAprobarSolicitud').value = data.id;
+        }
+
+
     });
 
 }
@@ -183,4 +217,66 @@ function obtenerDia(data)
     let fechaFormateada = diaSemana + ' ' + diaMes + ' de ' + mes + ' del ' + año;
 
     return fechaFormateada;
+}
+
+
+// Con este metodo vamos a registrar todos los eventos en el DOM
+//Una vez que el DOM este cargado
+function eventos()
+{
+    //Evento para cerrar modal de confirmacion de aprobacion de solicitud
+    document.getElementById('btnCerrarModalSolicitud').addEventListener('click' , function(){
+        cerrarModalConfirmacion('#modalAprobarSolicitud');
+    });
+
+
+    //Evento para actualizar estatus de solicitud
+    document.getElementById('btnAprobarSolicitud').addEventListener('click' , function(e)
+    {
+        const data = {
+            id: e.target.value
+        }
+        actualizarEstatus(data , '/colaboradores/aprobarSolicitud' , '#modalAprobarSolicitud');
+    });
+
+
+    //Evento para cerrar modal de rechazo de solicitud
+    document.getElementById('btnCerrarModalRechazo').addEventListener('click' , function(){
+        cerrarModalConfirmacion('#modalRechazarSolicitud');
+    });
+
+    //Evento para cambiar estado de solicitud a rechazada
+    document.getElementById('btnRechazoSolicitud').addEventListener('click' , function(){
+
+
+        let motivo = document.getElementById('motivoRechazoText').value;
+        let idRechazo = document.getElementById('idSolicitudRechazo').value;
+
+        const data = {
+            id: idRechazo,
+            motivo:motivo
+        }
+
+
+        if(motivo === '')
+        {
+            mensajeAlert('Error' , 'Debe ingresar el motivo por el cual rechaza la solicitud!' , 'error');
+        }else{
+            //hacemos peticion al servidor
+            actualizarEstatus(data , '/colaboradores/rechazarSolicitud' , '#modalRechazarSolicitud');
+        }
+    });
+}
+
+
+
+function cerrarModalConfirmacion(id)
+{
+    $(id).modal('hide');
+}
+
+function actualizarEstatus(id , url , modalId)
+{
+    cerrarModalConfirmacion(modalId);
+    peticionActualizacionEstatus(id , url);
 }

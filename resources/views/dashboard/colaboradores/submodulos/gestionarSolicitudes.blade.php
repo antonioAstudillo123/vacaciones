@@ -49,6 +49,8 @@
 
   {{-- BLOQUE DE MODALS --}}
   @include('dashboard.colaboradores.modals.gestionarSolicitudes.showFechas')
+  @include('dashboard.colaboradores.modals.gestionarSolicitudes.aprobarSolicitud')
+  @include('dashboard.colaboradores.modals.gestionarSolicitudes.rechazarSolicitud')
 
 @endsection
 

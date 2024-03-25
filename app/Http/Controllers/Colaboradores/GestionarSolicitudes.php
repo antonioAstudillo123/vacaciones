@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Colaboradores;
 
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -75,6 +76,11 @@ class GestionarSolicitudes extends Controller
     }
 
 
+    /*
+
+            Genero el detallado de fecha para mostrarlas en el modal dentro del modulo de
+            gestionarSolicitudes
+    */
     public function getSolicitudUser(Request $request)
     {
         $idSolicitud = $request->input('id');
@@ -91,5 +97,39 @@ class GestionarSolicitudes extends Controller
 
         return response()->json(['data' => $resultado]);
 
+    }
+
+
+    public function aprobarSolicitud(Request $request)
+    {
+        try {
+            DB::table($this->tablaSolicitudes)
+              ->where('id', $request->input('id'))
+              ->update(['estatus' => 'Aprobada']);
+        } catch (Exception $th) {
+            return response('Tuvimos problemas al actualizar la solicitud' , 500);
+        }
+
+        return response('Solicitud aprobada con éxito' , 200);
+    }
+
+
+    public function rechazarSolicitud(Request $request)
+    {
+        try {
+            DB::table($this->tablaSolicitudes)
+              ->where('id', $request->input('id'))
+              ->update(
+                [
+                    'estatus' => 'Rechazada',
+                    'observaciones' => Str::ucfirst($request->input('motivo'))
+
+                ]
+            );
+        } catch (Exception $th) {
+            return response('Tuvimos problemas al actualizar la solicitud', 500);
+        }
+
+        return response('Solicitud rechazada con éxito' , 200);
     }
 }

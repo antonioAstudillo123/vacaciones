@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RH\ConsultarSolicitudes;
 use App\Http\Controllers\Colaboradores\RegistroVacaciones;
 use App\Http\Controllers\Colaboradores\GestionarSolicitudes;
 
@@ -22,6 +23,11 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/colaboradores/getSolicitudUser' , 'getSolicitudUser');
         Route::post('/colaboradores/aprobarSolicitud' , 'aprobarSolicitud');
         Route::post('/colaboradores/rechazarSolicitud' , 'rechazarSolicitud');
+    });
+
+
+    Route::controller(ConsultarSolicitudes::class)->group(function(){
+        Route::get('/rh/gestionarSolicitudes' , 'index')->name('rh.index');
     });
 });
 

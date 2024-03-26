@@ -52,6 +52,7 @@ class GestionarSolicitudes extends Controller
                     ->where(function ($query) use ($busqueda) {
                         $query->where('sv.fecha', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('e.numeroEmpleado', 'LIKE', '%' . $busqueda . '%')
+                            ->orWhere('sv.dias', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('e.colaborador', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('sv.estatus', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('e.fechaIngreso', 'LIKE', '%' . $busqueda . '%');

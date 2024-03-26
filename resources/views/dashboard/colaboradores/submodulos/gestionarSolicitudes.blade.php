@@ -21,12 +21,12 @@
                             <th>Id</th>
                             <th>Colaborador</th>
                             <th>Fecha solicitud</th>
-                            <th>Días</th>
+                            <th>Días  solicitados</th>
                             <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-center">
                         <tr>
                             <td>1</td>
                             <td>Hector Leon</td>

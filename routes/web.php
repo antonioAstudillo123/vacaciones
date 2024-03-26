@@ -27,7 +27,8 @@ Route::middleware(['auth'])->group(function(){
 
 
     Route::controller(ConsultarSolicitudes::class)->group(function(){
-        Route::get('/rh/gestionarSolicitudes' , 'index')->name('rh.index');
+        Route::get('/rh/resumen' , 'index')->name('rh.index');
+        Route::get('/rh/all' , 'all');
     });
 });
 

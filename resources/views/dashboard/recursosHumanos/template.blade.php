@@ -10,13 +10,13 @@
       <li class="nav-item">
         <a href="{{ route('rh.index') }}" class="nav-link">
           <i class="far fa-circle nav-icon text-primary"></i>
-          <p>Consultar solicitudes</p>
+          <p>Solicitudes {{ date('Y') }}</p>
         </a>
       </li>
       <li class="nav-item">
         <a href="../index2.html" class="nav-link">
           <i class="far fa-circle nav-icon text-primary"></i>
-          <p>Histórico</p>
+          <p>Vacaciones anticipadas</p>
         </a>
       </li>
     </ul>

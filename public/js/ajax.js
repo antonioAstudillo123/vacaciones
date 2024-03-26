@@ -1,4 +1,5 @@
-
+import { crearExcelDetails } from "./excel.js";
+import { generarPdfDetails } from "./pdf.js";
 import { mensajeAlert } from "./auxiliares.js";
 
 
@@ -76,6 +77,62 @@ export function peticionActualizacionEstatus(data , url)
                     $("#tablaSolicitudes").DataTable().ajax.reload();
                   });
 
+            },
+            error: function(error)
+            {
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+            }
+        });
+}
+
+
+
+export function peticionReportesExcel(url , type , data = null){
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+    });
+
+    $.ajax({
+            type: type,
+            url: url,
+            data:data,
+            success: function(response)
+            {
+                crearExcelDetails(response.data, "resumen.xlsx");
+            },
+            error: function(error)
+            {
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+            }
+        });
+}
+
+
+export function peticionReportesPDF(url , type , encabezado , tituloReporte , nombreArchivo , data = null){
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+    });
+
+    $.ajax({
+            type: type,
+            url: url,
+            data:data,
+            success: function(response)
+            {
+                generarPdfDetails(
+                    response.data,
+                    encabezado,
+                    tituloReporte,
+                    nombreArchivo
+                );
             },
             error: function(error)
             {

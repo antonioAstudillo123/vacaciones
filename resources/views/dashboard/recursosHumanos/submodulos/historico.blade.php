@@ -36,20 +36,12 @@
                           <th>Colaborador</th>
                           <th>Número empleado</th>
                           <th>Fecha ingreso</th>
-                          <th>Días solicitados</th>
+                          <th>Días aprobados</th>
                           <th>Días restantes</th>
                           <th>Opciones</th>
                       </tr>
                   </thead>
                   <tbody class="text-center">
-                      <tr>
-                          <td>Hector Leon</td>
-                          <td>458203</td>
-                          <td>24-03-2024</td>
-                          <td>4</td>
-                          <td>8</td>
-                          <td></td>
-                      </tr>
                   </tbody>
               </table>
           </div>

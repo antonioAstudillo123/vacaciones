@@ -1,4 +1,4 @@
-import { mensajeAlert } from "../../auxiliares.js";
+
 import { peticionReportesPDF , peticionReportesExcel } from "../../ajax.js";
 
 window.onload = main;
@@ -34,7 +34,7 @@ function datatable()
             {
                 defaultContent: `
                     <div class='container d-flex justify-content-center'>
-                        <button class='fechas btn btn-info btn-sm mr-2' data-bs-toggle="tooltip"
+                        <button class='reporte btn btn-info btn-sm mr-2' data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Visualizar fechas">
                             <i class="fa-solid fa-file-lines"></i>
                         </button>
@@ -43,10 +43,10 @@ function datatable()
         ],
         language: {
             "decimal": "",
-            "emptyTable": "No hay solicitudes",
-            "info": "Mostrando _TOTAL_ solicitudes",
-            "infoEmpty": "Mostrando 0 to 0 of 0 Solicitudes",
-            "infoFiltered": "(Filtrado de _MAX_ total solicitudes)",
+            "emptyTable": "No hay colaboradores",
+            "info": "Mostrando _TOTAL_ colaboradores",
+            "infoEmpty": "Mostrando 0 to 0 of 0 colaboradores",
+            "infoFiltered": "(Filtrando de _MAX_ total colaboradores)",
             "infoPostFix": "",
             "thousands": ",",
             "lengthMenu": "",
@@ -54,7 +54,7 @@ function datatable()
             "processing": "Procesando...",
             "search": "",
             'searchPlaceholder': "Buscar...",
-            "zeroRecords": "Sin solicitudes que mostrar",
+            "zeroRecords": "Sin colaboradores que mostrar",
             "paginate": {
                 "first": "<<",
                 "last": ">>",
@@ -78,53 +78,28 @@ function obtener_data(tbody, tabla)
 {
     let data = [];
 
-    $(tbody).on("click", "button.fechas", function () {
+    $(tbody).on("click", "button.reporte", function () {
         data = tabla.row($(this).closest("tr")).data();
         $('#showFechasModal').modal('show');
-        console.log(data);
-        llenarTablaSolicitudEmpleado(data);
+
+        const dataUser = {
+            id: data.id
+        }
+
+        const headers = [
+            "id",
+            "Número empleado",
+            "Colaborador",
+            "Fecha ingreso",
+            "Días tomados",
+            "Días restantes",
+            "Año"
+        ];
+
+        peticionReportesPDF('/rh/reporteEmpleado' , 'GET' , headers , 'Resumen vacaciones' , 'resumen' , dataUser);
     });
 
-
-    $(tbody).on("click", "button.cancelaciones", function () {
-        data = tabla.row($(this).closest("tr")).data();
-
-        if(data.estatus === 'Aprobada')
-        {
-            mensajeAlert('Error' , 'Esta solicitud ya fue aprobada, no puedes cancelarla!' , 'error');
-        }else if(data.estatus === 'Rechazada'){
-            mensajeAlert('Error' , 'Esta solicitud ya fue rechazada!' , 'error');
-        }
-        else{
-            $('#modalRechazarSolicitud').modal('show');
-            document.getElementById('idSolicitudRechazo').value = data.id;
-            document.getElementById('colaboradorInputModal').value = data.colaborador;
-        }
-    });
-
-
-    $(tbody).on("click", "button.aprobaciones", function () {
-        data = tabla.row($(this).closest("tr")).data();
-
-        if(data.estatus === 'Aprobada')
-        {
-            mensajeAlert('Error' , 'Esta solicitud ya fue aprobada!' , 'error');
-        }else if(data.estatus === 'Rechazada'){
-            mensajeAlert('Error' , 'Esta solicitud fue rechazada, no se puede aprobar!' , 'error');
-        }
-        else{
-            $('#modalAprobarSolicitud').modal('show');
-            document.getElementById('btnAprobarSolicitud').value = data.id;
-        }
-
-    });
 }
-
-
-
-
-
-
 
 
 // Con este metodo vamos a registrar todos los eventos en el DOM
@@ -150,6 +125,7 @@ function eventos()
                 "Fecha ingreso",
                 "Días tomados",
                 "Días restantes",
+                "Año"
             ];
 
 

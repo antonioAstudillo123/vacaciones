@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+
+@section('cssPagina')
+
+ {{-- <link rel="stylesheet" href="{{ asset('css/datatable/bootstrap.min.css') }}"> --}}
+ <link rel="stylesheet" href="{{ asset('css/datatable/dataTables.bootstrap5.css') }}">
+ <link rel="stylesheet" href="{{ asset('css/datatable/responsive.bootstrap5.css') }}">
+@endsection
+
+
 @section('tituloPagina')
     Univer | Resumen solicitudes
 @endsection
@@ -29,16 +38,17 @@
             </div>
           </div>
           <!-- /.card-header -->
-          <div class="card-body">
-              <table id="tablaHistorico" class="table table-bordered table-hover">
+          <div class="card-body table-responsive">
+              <table id="tablaHistorico" class="display table table-bordered table-hover" style="width:100%">
                   <thead>
                       <tr>
-                          <th>Colaborador</th>
-                          <th>Número empleado</th>
-                          <th>Fecha ingreso</th>
-                          <th>Días aprobados</th>
-                          <th>Días restantes</th>
-                          <th>Opciones</th>
+                        <th>Número</th>
+                        <th>Nombre</th>
+                        <th>Puesto</th>
+                        <th>Ingreso</th>
+                        <th>Aprobados</th>
+                        <th>Disponibles</th>
+                        <th>Opciones</th>
                       </tr>
                   </thead>
                   <tbody class="text-center">
@@ -58,10 +68,11 @@
 @endsection
 
 @section('scriptsPagina')
+<script src="{{ asset('js/jquery/jquery-3.7.1.js') }}"></script>
+<script src="{{ asset('js/datatable/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/datatable/dataTables.js') }}"></script>
 <script src="{{ asset('js/datatable/dataTables.bootstrap5.js') }}"></script>
-<script src="{{ asset('js/datatable/dataTables.responsive.js') }}"></script>
-<script src="{{ asset('js/datatable/responsive.bootstrap5.js') }}"></script>
+
  {{-- CDN NECESARIO PARA GENERAR EL ARCHIVO EXCEL --}}
  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.core.min.js" integrity="sha512-UhlYw//T419BPq/emC5xSZzkjjreRfN3426517rfsg/XIEC02ggQBb680V0VvP+zaDZ78zqse3rqnnI5EJ6rxA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 

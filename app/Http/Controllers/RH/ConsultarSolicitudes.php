@@ -28,12 +28,13 @@ class ConsultarSolicitudes extends Controller
         $anioActual = date('Y');
 
         $resultados = DB::table('empleados as e')
-            ->select('e.id', 'e.numeroEmpleado', 'e.colaborador', 'e.fechaIngreso', DB::raw('SUM(sv.dias) AS diasTomados'))
+            ->select('e.id', 'e.numeroEmpleado', 'e.colaborador', 'e.fechaIngreso', 'puestos.nombre as puestoNombre' , DB::raw('SUM(sv.dias) AS diasTomados'))
             ->leftJoin('solicitud_vacaciones AS sv', function($join) use ($anioActual) {
                 $join->on('e.id', '=', 'sv.id_empleado')
                     ->where('sv.estatus', '=', 'Aprobada')
                     ->whereYear('sv.fecha', '=', $anioActual);
             })
+            ->join('puestos' , 'puestos.id' , '=' , 'e.idPuesto')
             ->groupBy('e.id', 'e.numeroEmpleado', 'e.colaborador', 'e.fechaIngreso')
             ->orderBy('e.colaborador')
             ->get()
@@ -87,12 +88,13 @@ class ConsultarSolicitudes extends Controller
         $idEmpleado = $request->input('id');
 
         $resultados = DB::table('empleados as e')
-        ->select('e.id', 'e.numeroEmpleado', 'e.colaborador', 'e.fechaIngreso', DB::raw('SUM(sv.dias) AS diasTomados'))
+        ->select('e.numeroEmpleado', 'e.colaborador', 'e.fechaIngreso', 'puestos.nombre as puestoNombre' , DB::raw('SUM(sv.dias) AS diasTomados'))
         ->leftJoin('solicitud_vacaciones AS sv', function($join) use ($anioActual) {
             $join->on('e.id', '=', 'sv.id_empleado')
                 ->where('sv.estatus', '=', 'Aprobada')
                 ->whereYear('sv.fecha', '=', $anioActual);
         })
+        ->join('puestos' , 'puestos.id' , '=' , 'e.idPuesto')
         ->where('e.id', '=', $idEmpleado)
         ->groupBy('e.id', 'e.numeroEmpleado', 'e.colaborador', 'e.fechaIngreso')
         ->orderBy('e.colaborador')

@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
         <link rel="stylesheet" href="{{ asset('css/fullcalendar/main.css') }}">
         <link rel="stylesheet" href="{{ asset('css/adminlte/adminlte.min.css') }}">
+
+        @yield('cssPagina')
     </head>
     <body class="hold-transition sidebar-mini">
         <div class="wrapper">

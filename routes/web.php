@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RH\ConsultarSolicitudes;
 use App\Http\Controllers\Colaboradores\RegistroVacaciones;
 use App\Http\Controllers\Colaboradores\GestionarSolicitudes;
-
+use App\Http\Controllers\Sistemas\GestionarUsuarios;
 
 Route::redirect('/', '/login');
 
@@ -31,6 +31,15 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/rh/all' , 'all');
         Route::get('/rh/reporteEmpleado' , 'reporteEmpleado');
     });
+
+    Route::controller(GestionarUsuarios::class)->group(function(){
+        Route::get('/sistemas/gestionarUsuarios' , 'index')->name('gestionarUsuarios.index');
+        Route::get('/sistemas/crearUsuario' , 'store');
+        Route::get('/sistemas/all' , 'all');
+    });
+
+
+
 });
 
 

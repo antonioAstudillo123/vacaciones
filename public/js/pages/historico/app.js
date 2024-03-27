@@ -21,13 +21,13 @@ function datatable()
             url: '/rh/all',
             dataSrc: "data",
         },
-        ordering: false,
-        searching: true,
+        ordering:false,
         responsive: true,
         columns:
         [
-            { data: "colaborador" },
             { data: "numeroEmpleado" },
+            { data: "colaborador" },
+            {data:'puestoNombre'},
             { data: "fechaIngreso" },
             { data: "diasTomados" },
             {data:'diasRestante'},
@@ -87,10 +87,10 @@ function obtener_data(tbody, tabla)
         }
 
         const headers = [
-            "id",
-            "Número empleado",
-            "Colaborador",
+            "Empleado",
+            "Nombre",
             "Fecha ingreso",
+            "Puesto",
             "Días tomados",
             "Días restantes",
             "Año"
@@ -119,10 +119,11 @@ function eventos()
         .addEventListener("click", function () {
 
             const headers = [
-                "id",
-                "Número empleado",
-                "Colaborador",
+                "Id",
+                "Empleado",
+                "Nombre",
                 "Fecha ingreso",
+                "Puesto",
                 "Días tomados",
                 "Días restantes",
                 "Año"

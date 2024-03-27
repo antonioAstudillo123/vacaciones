@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\QueryException;
 use Throwable;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -26,5 +28,19 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, \Throwable $exception)
+    {
+        if ($exception instanceof QueryException)
+        {
+
+            if ($exception->errorInfo[1] == 1062)
+            {
+                return response('El correo ingresado ya existe!!', 500);
+            }
+        }
+
+        return parent::render($request, $exception);
     }
 }

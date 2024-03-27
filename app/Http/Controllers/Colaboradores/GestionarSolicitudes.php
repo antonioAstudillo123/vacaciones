@@ -31,6 +31,7 @@ class GestionarSolicitudes extends Controller
     }
 
 
+    //Con este metodo llenamos la datatable del modulo /colaboradores/gestionarSolicitudes
     public function getSolicitudes(Request $request)
     {
         $idJefe = Auth::user()->id;

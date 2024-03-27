@@ -11,9 +11,12 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <div class="">
+            <div class="d-flex justify-content-between">
                 <div class="">
                     <h3 class="card-title">Listado de usuarios</h3>
+                </div>
+                <div class="">
+                    <button type="button" class="btn btn-success btn-sm">Agregar usuario</button>
                 </div>
             </div>
           </div>
@@ -42,6 +45,9 @@
     <!-- /.row -->
   <!-- /.container-fluid -->
 </section>
+
+@include('dashboard.sistemas.modals.editUser')
+@include('dashboard.sistemas.modals.confirmDelete')
 
 @endsection
 

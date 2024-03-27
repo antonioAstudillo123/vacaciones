@@ -1,17 +1,16 @@
-import {peticionActualizacionEstatus} from '../../ajax.js';
-import { mensajeAlert } from "../../auxiliares.js";
+import {peticionUpdateUser , peticionEliminarUser} from '../../ajax.js';
 
 window.onload = main;
 
 function main()
 {
     //Activamos eventos en el DOM
-   // eventos();
+   eventos();
 
     const tabla = datatable();
 
     //Le añadimos eventos al datatable
-    //obtener_data("#tablaUsuarios" , tabla);
+    obtener_data("#tablaUsuarios" , tabla);
 }
 
 function datatable()
@@ -40,15 +39,11 @@ function datatable()
             {
                 defaultContent: `
                     <div class='container d-flex justify-content-center'>
-                        <button class='fechas btn btn-primary btn-sm mr-2' data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Visualizar información">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                        <button class='aprobaciones btn btn-warning btn-sm mr-2' data-bs-toggle="tooltip"
+                        <button class='editar btn btn-warning btn-sm mr-2' data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Editar información">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <button class='cancelaciones btn btn-danger btn-sm mr-2' data-bs-toggle="tooltip"
+                        <button class='eliminar btn btn-danger btn-sm mr-2' data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Eliminar usuario">
                             <i class="fa-solid fa-user-minus"></i>
                         </button>
@@ -57,10 +52,10 @@ function datatable()
         ],
         language: {
             "decimal": "",
-            "emptyTable": "No hay solicitudes",
-            "info": "Mostrando _TOTAL_ solicitudes",
-            "infoEmpty": "Mostrando 0 to 0 of 0 Solicitudes",
-            "infoFiltered": "(Filtrado de _MAX_ total solicitudes)",
+            "emptyTable": "No hay usuarios",
+            "info": "Mostrando _TOTAL_ usuarios",
+            "infoEmpty": "Mostrando 0 to 0 of 0 usuarios",
+            "infoFiltered": "(Filtrado de _MAX_ total usuarios)",
             "infoPostFix": "",
             "thousands": ",",
             "lengthMenu": "",
@@ -68,7 +63,7 @@ function datatable()
             "processing": "Procesando...",
             "search": "",
             'searchPlaceholder': "Buscar...",
-            "zeroRecords": "Sin solicitudes que mostrar",
+            "zeroRecords": "Sin usuarios que mostrar",
             "paginate": {
                 "first": "<<",
                 "last": ">>",
@@ -83,169 +78,44 @@ function obtener_data(tbody, tabla)
 {
     let data = [];
 
-    $(tbody).on("click", "button.fechas", function () {
+
+    $(tbody).on("click", "button.editar", function () {
         data = tabla.row($(this).closest("tr")).data();
-        $('#showFechasModal').modal('show');
-        console.log(data);
-        llenarTablaSolicitudEmpleado(data);
+        $('#editUserModal').modal('show');
+        llenarModalUser(data);
     });
 
 
-    $(tbody).on("click", "button.cancelaciones", function () {
+    $(tbody).on("click", "button.eliminar", function () {
         data = tabla.row($(this).closest("tr")).data();
+        $('#modalConfirmDeleteUser').modal('show');
+        document.getElementById('btnAprobarSolicitud').value = data.id;
 
-        if(data.estatus === 'Aprobada')
-        {
-            mensajeAlert('Error' , 'Esta solicitud ya fue aprobada, no puedes cancelarla!' , 'error');
-        }else if(data.estatus === 'Rechazada'){
-            mensajeAlert('Error' , 'Esta solicitud ya fue rechazada!' , 'error');
-        }
-        else{
-            $('#modalRechazarSolicitud').modal('show');
-            document.getElementById('idSolicitudRechazo').value = data.id;
-            document.getElementById('colaboradorInputModal').value = data.colaborador;
-        }
-    });
-
-
-    $(tbody).on("click", "button.aprobaciones", function () {
-        data = tabla.row($(this).closest("tr")).data();
-
-        if(data.estatus === 'Aprobada')
-        {
-            mensajeAlert('Error' , 'Esta solicitud ya fue aprobada!' , 'error');
-        }else if(data.estatus === 'Rechazada'){
-            mensajeAlert('Error' , 'Esta solicitud fue rechazada, no se puede aprobar!' , 'error');
-        }
-        else{
-            $('#modalAprobarSolicitud').modal('show');
-            document.getElementById('btnAprobarSolicitud').value = data.id;
-        }
-
-
-    });
-
-}
-
-
-function llenarTablaSolicitudEmpleado(data)
-{
-    document.getElementById('colaboradorModal').textContent = data.colaborador;
-    const dataUser = {
-        id:data.id
-    }
-
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
-        },
-    });
-
-    $.ajax({
-        type: 'POST',
-        url: '/colaboradores/getSolicitudUser',
-        data: dataUser,
-        beforeSend: function (xhr) {
-            // Agregar cabeceras de seguridad
-            xhr.setRequestHeader("X-Content-Type-Options", "nosniff");
-            xhr.setRequestHeader("X-Frame-Options", "DENY");
-            xhr.setRequestHeader(
-                "Content-Security-Policy",
-                "default-src 'self'"
-            );
-        },
-        success: function(response)
-        {
-            const {data} = response;
-            let html = '';
-
-            data.forEach(element => {
-               html += `    <tr>
-               <th>${element.id}</th>
-               <td>${element.fecha}</td>
-               <th>${obtenerDia(element.dia)}</th>
-             </tr>`
-            });
-
-            document.getElementById('bodyTablaModal').innerHTML = html;
-        },
-
-        error: function(error)
-        {
-            console.log(error);
-            //mensajeAlert('error' , 'Ups!' , 'No pudimos actualizar el registro. Contacta a sistemas');
-        }
     });
 }
-
-
-function obtenerDia(data)
-{
-    let dia = new Date(data);
-    // Días de la semana en formato texto
-    let diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-
-    // Meses del año en formato texto
-    let meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-    let diaSemana = diasSemana[dia.getDay()];
-    let diaMes = dia.getDate();
-    let mes = meses[dia.getMonth()];
-    let año = dia.getFullYear();
-
-    // Construir la cadena de fecha formateada
-    let fechaFormateada = diaSemana + ' ' + diaMes + ' de ' + mes + ' del ' + año;
-
-    return fechaFormateada;
-}
-
 
 // Con este metodo vamos a registrar todos los eventos en el DOM
 //Una vez que el DOM este cargado
 function eventos()
 {
-    //Evento para cerrar modal de confirmacion de aprobacion de solicitud
+    //cerramos modal de show user
     document.getElementById('btnCerrarModalSolicitud').addEventListener('click' , function(){
-        cerrarModalConfirmacion('#modalAprobarSolicitud');
+        cerrarModalConfirmacion('#editUserModal');
+    });
+
+    //evento de btn de edit user
+    document.getElementById('btnEditUser').addEventListener('click' , editUser);
+
+
+    //Cerramos modal de confirmacion delete
+    document.getElementById('btnCerrarModalConfirmDelete').addEventListener('click' , function(){
+        cerrarModalConfirmacion('#modalConfirmDeleteUser');
     });
 
 
-    //Evento para actualizar estatus de solicitud
-    document.getElementById('btnAprobarSolicitud').addEventListener('click' , function(e)
-    {
-        const data = {
-            id: e.target.value
-        }
-        actualizarEstatus(data , '/colaboradores/aprobarSolicitud' , '#modalAprobarSolicitud');
-    });
-
-
-    //Evento para cerrar modal de rechazo de solicitud
-    document.getElementById('btnCerrarModalRechazo').addEventListener('click' , function(){
-        cerrarModalConfirmacion('#modalRechazarSolicitud');
-    });
-
-    //Evento para cambiar estado de solicitud a rechazada
-    document.getElementById('btnRechazoSolicitud').addEventListener('click' , function(){
-
-
-        let motivo = document.getElementById('motivoRechazoText').value;
-        let idRechazo = document.getElementById('idSolicitudRechazo').value;
-
-        const data = {
-            id: idRechazo,
-            motivo:motivo
-        }
-
-
-        if(motivo === '')
-        {
-            mensajeAlert('Error' , 'Debe ingresar el motivo por el cual rechaza la solicitud!' , 'error');
-        }else{
-            //hacemos peticion al servidor
-            actualizarEstatus(data , '/colaboradores/rechazarSolicitud' , '#modalRechazarSolicitud');
-        }
+    //Se aprueba la solicitud de eliminar el usuario
+    document.getElementById('btnAprobarSolicitud').addEventListener('click' , function(e){
+        eliminarUsuario(e.target.value);
     });
 }
 
@@ -256,8 +126,36 @@ function cerrarModalConfirmacion(id)
     $(id).modal('hide');
 }
 
-function actualizarEstatus(id , url , modalId)
+function llenarModalUser(data)
 {
-    cerrarModalConfirmacion(modalId);
-    peticionActualizacionEstatus(id , url);
+    document.getElementById('userName').value = data.name;
+    document.getElementById('emailUser').value = data.email;
+    document.getElementById('idUser').value = data.id;
+}
+
+
+function editUser()
+{
+    let name = document.getElementById('userName').value;
+    let email = document.getElementById('emailUser').value;
+    let password = document.getElementById('passwordUser').value;
+    let id = document.getElementById('idUser').value;
+
+    const data = {
+        name:name,
+        email:email,
+        password:password,
+        id:id
+    }
+
+    peticionUpdateUser('/sistemas/update' , 'POST' , data);
+}
+
+
+function eliminarUsuario(id)
+{
+    const data = {
+        id:id
+    }
+    peticionEliminarUser('/sistemas/delete' , 'POST' , data);
 }

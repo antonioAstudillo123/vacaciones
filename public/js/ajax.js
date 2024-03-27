@@ -140,3 +140,76 @@ export function peticionReportesPDF(url , type , encabezado , tituloReporte , no
             }
         });
 }
+
+
+
+export function peticionUpdateUser(url , type , data)
+{
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+    });
+
+    $.ajax({
+            type: type,
+            url: url,
+            data:data,
+            success: function(response)
+            {
+                Swal.fire({
+                    title: 'Buen trabajo!',
+                    text: response,
+                    icon: 'success'
+                  }).then(()=>{
+
+                    $('#editUserModal').modal('hide');
+
+                    if(document.getElementById('formEditUser') !== null)
+                    {
+                        document.getElementById('formEditUser').reset();
+                    }
+                    $("#tablaUsuarios").DataTable().ajax.reload();
+                  });
+            },
+            error: function(error)
+            {
+                mensajeAlert('No pudimos procesar la solicitud!' , error.responseText , 'error');
+            }
+        });
+}
+
+
+export function peticionEliminarUser(url , type , data)
+{
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+    });
+
+    $.ajax({
+            type: type,
+            url: url,
+            data:data,
+            success: function(response)
+            {
+                Swal.fire({
+                    title: 'Buen trabajo!',
+                    text: response,
+                    icon: 'success'
+                  }).then(()=>{
+                    $("#tablaUsuarios").DataTable().ajax.reload();
+                    $('#modalConfirmDeleteUser').modal('hide');
+                  });
+            },
+            error: function(error)
+            {
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+            }
+        });
+}

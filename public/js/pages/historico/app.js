@@ -23,6 +23,7 @@ function datatable()
         },
         ordering:false,
         responsive: true,
+
         columns:
         [
             { data: "numeroEmpleado" },
@@ -66,9 +67,9 @@ function datatable()
 
             if(data.diasRestante <= 0)
             {
-                $(cells[4]).addClass('text-danger');
+                $(cells[5]).addClass('text-danger');
             }else{
-                $(cells[4]).addClass('text-success');
+                $(cells[5]).addClass('text-success');
             }
         },
     });

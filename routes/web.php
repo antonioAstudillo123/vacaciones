@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/colaboradores/getSolicitudUser' , 'getSolicitudUser');
         Route::post('/colaboradores/aprobarSolicitud' , 'aprobarSolicitud');
         Route::post('/colaboradores/rechazarSolicitud' , 'rechazarSolicitud');
+
     });
 
 
@@ -36,6 +37,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/sistemas/gestionarUsuarios' , 'index')->name('gestionarUsuarios.index');
         Route::get('/sistemas/crearUsuario' , 'store');
         Route::get('/sistemas/all' , 'all');
+        Route::post('/sistemas/update' , 'update');
+        Route::post('/sistemas/delete' , 'destroy');
     });
 
 

@@ -1,5 +1,5 @@
-import {peticionUpdateUser , peticionEliminarUser} from '../../ajax.js';
-
+import {peticionUpdateUser , peticionEliminarUser , peticionAddUser} from '../../ajax.js';
+import { mensajeAlert } from "../../auxiliares.js";
 window.onload = main;
 
 function main()
@@ -117,7 +117,24 @@ function eventos()
     document.getElementById('btnAprobarSolicitud').addEventListener('click' , function(e){
         eliminarUsuario(e.target.value);
     });
+
+
+    //Evento del boton para agregar usuario
+    document.getElementById('btnAddUser').addEventListener('click' , function(){
+        $("#addUserModal").modal('show');
+    });
+
+
+    //Evento para cerrar modal de add user
+    document.getElementById('btnCerrarAddUser').addEventListener('click' , function(){
+        cerrarModalConfirmacion("#addUserModal");
+    });
+
+
+    //Evento para guardar usuario en el sistema
+    document.getElementById('btnSaveUser').addEventListener('click' , saveUser);
 }
+
 
 
 
@@ -158,4 +175,33 @@ function eliminarUsuario(id)
         id:id
     }
     peticionEliminarUser('/sistemas/delete' , 'POST' , data);
+}
+
+
+function saveUser()
+{
+    let user = document.getElementById('userNameAdd').value;
+    let email = document.getElementById('emailUserAdd').value;
+    let password = document.getElementById('passwordAdd').value;
+
+
+    if(user === '')
+    {
+        mensajeAlert('Error!' , 'Debe ingresar un usuario!' , 'error');
+    }else if(email === '')
+    {
+        mensajeAlert('Error!' , 'Debe ingresar un email!' , 'error');
+    }else if(password === '')
+    {
+        mensajeAlert('Error!' , 'Debe ingresar un password!' , 'error');
+    }else{
+
+        const data = {
+            email:email,
+            user:user,
+            password:password
+        }
+
+        peticionAddUser('/sistemas/create' , 'POST' , data);
+    }
 }

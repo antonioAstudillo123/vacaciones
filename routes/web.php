@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/sistemas/all' , 'all');
         Route::post('/sistemas/update' , 'update');
         Route::post('/sistemas/delete' , 'destroy');
+        Route::post('/sistemas/create' , 'create');
     });
 
 

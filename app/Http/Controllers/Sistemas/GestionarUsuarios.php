@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Sistemas;
 
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -20,29 +22,19 @@ class GestionarUsuarios extends Controller
          * Debemos de enviar la data con la que vamos a llenar los select's
          */
 
-         $planteles = DB::table('planteles')
-                    ->select('id', 'nombre')
-                    ->distinct()
-                    ->orderBy('nombre')
-                    ->get();
-
-        $areas = DB::table('areas')
-                    ->select('id', 'nombre')
-                    ->distinct()
-                    ->orderBy('nombre')
-                    ->get();
-
-        $puestos = DB::table('puestos')
-                    ->select('id', 'nombre')
-                    ->distinct()
-                    ->orderBy('nombre')
-                    ->get();
+        $colaboradores = DB::table('empleados')->select('numeroEmpleado' , 'colaborador')->where('idUser' , '=' , null)->get();
 
 
-        return view('dashboard.sistemas.submodulos.gestionarUsuarios' , ['planteles' => $planteles , 'areas' => $areas , 'puestos' => $puestos]);
+        return view('dashboard.sistemas.submodulos.gestionarUsuarios' , ['colaboradores' => $colaboradores]);
     }
 
 
+    /**
+     * Obtenemos la informacion de todos los usuarios para mostrarla en el datatable
+     *
+     * @param Request $request
+     * @return void
+     */
     public function all(Request $request)
     {
         $busqueda = $request->input('search.value');
@@ -128,6 +120,12 @@ class GestionarUsuarios extends Controller
 
     }
 
+    /**
+     * Actualizamos la información de un usuario
+     *
+     * @param Request $request
+     * @return void
+     */
     public function update(Request $request)
     {
         $data = $request->all();
@@ -186,5 +184,40 @@ class GestionarUsuarios extends Controller
 
         return response('Usuario eliminado con éxito' , 200);
     }
+
+
+
+
+    /**
+     * Creamos un nuevo usuario en el sistema
+     */
+
+     public function create(Request $request)
+     {
+        $data = $request->all();
+
+        try {
+
+            DB::table('users')->insert(
+                [
+                    'name' => Str::title($data['user']),
+                    'email' => $data['email'] ,
+                    'password' => Hash::make($data['password']),
+                    'created_at' => Carbon::now()
+                ]
+            );
+
+        } catch (QueryException  $th) {
+
+            if ($th->errorInfo[1] == 1062) {
+                return response('El correo ingresado ya existe!' , 500);
+            }else{
+                return response('Tuvimos problemas al procesar la solicitud!' , 500);
+            }
+
+        }
+
+        return response('Usuario agregado correctamente' , 200);
+     }
 
 }

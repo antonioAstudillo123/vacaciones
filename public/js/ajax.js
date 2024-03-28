@@ -213,3 +213,37 @@ export function peticionEliminarUser(url , type , data)
             }
         });
 }
+
+
+export function peticionAddUser(url , type, data)
+{
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+    });
+
+    $.ajax({
+            type: type,
+            url: url,
+            data:data,
+            success: function(response)
+            {
+                console.log(response);
+                Swal.fire({
+                    title: 'Buen trabajo!',
+                    text: response,
+                    icon: 'success'
+                  }).then(()=>{
+                    $("#tablaUsuarios").DataTable().ajax.reload();
+                    $('#addUserModal').modal('hide');
+                  });
+            },
+            error: function(error)
+            {
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+            }
+        });
+}

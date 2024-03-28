@@ -7,11 +7,14 @@
       </p>
     </a>
     <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ route('gestionarUsuarios.index') }}" class="nav-link">
-          <i class="far fa-circle nav-icon text-primary"></i>
-          <p>Gestionar colaboradores</p>
-        </a>
-      </li>
+        @can('gestionar colaboradores')
+            <li class="nav-item">
+                <a href="{{ route('gestionarUsuarios.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon text-primary"></i>
+                <p>Gestionar colaboradores</p>
+                </a>
+            </li>
+        @endcan
+
     </ul>
 </li>

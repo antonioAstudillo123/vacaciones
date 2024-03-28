@@ -21,8 +21,15 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             @include('dashboard.colaboradores.template')
-            @include('dashboard.recursosHumanos.template')
-            @include('dashboard.sistemas.template')
+
+            @can('recursos humanos')
+                @include('dashboard.recursosHumanos.template')
+            @endcan
+
+            @can('sistemas')
+                @include('dashboard.sistemas.template')
+            @endcan
+
             @include('dashboard.cerrarSesion.template')
         </ul>
       </nav>

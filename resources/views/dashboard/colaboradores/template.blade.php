@@ -8,17 +8,22 @@
       </p>
     </a>
     <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ route('registroVacaciones.index') }}" class="nav-link">
-          <i class="far fa-circle nav-icon text-primary"></i>
-          <p>Solicitar vacaciones</p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="{{ route('gestionarSolicitudes.index') }}" class="nav-link">
-          <i class="far fa-circle nav-icon text-primary"></i>
-          <p>Gestionar solicitudes</p>
-        </a>
-      </li>
+        @can('solicitar vacaciones')
+            <li class="nav-item">
+                <a href="{{ route('registroVacaciones.index') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon text-primary"></i>
+                    <p>Solicitar vacaciones</p>
+                </a>
+            </li>
+        @endcan
+
+        @can('gestionar solicitudes')
+            <li class="nav-item">
+                <a href="{{ route('gestionarSolicitudes.index') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon text-primary"></i>
+                    <p>Gestionar solicitudes</p>
+                </a>
+            </li>
+        @endcan
     </ul>
 </li>

@@ -220,4 +220,16 @@ class GestionarUsuarios extends Controller
         return response('Usuario agregado correctamente' , 200);
      }
 
+
+
+     public function actualizarPassword()
+     {
+        DB::table('users')
+        ->update(
+            [
+                'password' => Hash::make('Univer10')
+            ]
+        );
+     }
+
 }

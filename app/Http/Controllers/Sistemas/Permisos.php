@@ -21,29 +21,41 @@ class Permisos extends Controller
      */
     public function create()
     {
-        $role = Role::findByName('colaborador');
+        //Creamos permisos
+        // Permission::create(['name' => 'solicitar vacaciones']);
+        // Permission::create(['name' => 'gestionar solicitudes']);
+        // Permission::create(['name' => 'solicitudes']);
+        // Permission::create(['name' => 'gestionar colaboradores']);
+        // Permission::create(['name' => 'recursos humanos']);
+        // Permission::create(['name' => 'sistemas']);
 
-        // Obtener los permisos que deseas asignar al rol
-        $permissions = Permission::whereIn('name', ['solicitar vacaciones'])->get();
+        //Creamos roles
+        // Role::create(['name' => 'administrador']);
+        // Role::create(['name' => 'humanos']);
+        // Role::create(['name' => 'colaborador']);
 
-        // Asignar permisos al rol
-        $role->syncPermissions($permissions);
-        // $user = User::find(1);
 
+        //asignamos permisos a un rol
         // $role = Role::findByName('administrador');
-        // $user->assignRole($role);
-        // echo 'Asigno role a carlos';
 
-        // $role = Role::findByName('colaborador');
 
-        // $permissions = Permission::whereIn('name', ['solicitar vacaciones'])->get();
+        // //Asignamos permisos a role
+        // $permissions = Permission::whereIn('name',
+        // [
+        //     'solicitar vacaciones' ,
+        //     'gestionar solicitudes',
+        //     'solicitudes',
+        //     'gestionar colaboradores',
+        //     'recursos humanos',
+        //     'sistemas'
+        // ])->get();
 
         // $role->syncPermissions($permissions);
 
+             // Asignar un rol al usuario
+        // $user = User::find(6);
 
-        // $user = User::find(4);
-        // // Asignar un rol al usuario
-        // $role = Role::findByName('humanos');
+        // $role = Role::findByName('administrador');
         // $user->assignRole($role);
     }
 

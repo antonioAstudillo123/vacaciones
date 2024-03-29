@@ -46,23 +46,13 @@ Route::middleware(['auth'])->group(function()
     });
 
 
-    Route::group(['middleware' => ['can:solicitudes , empleados']] , function(){
+    Route::group(['middleware' => ['can:solicitudes,empleados']] , function(){
         Route::controller(ConsultarSolicitudes::class)->group(function(){
             Route::get('/rh/resumen' , 'index')->name('rh.index');
             Route::get('/rh/all' , 'all');
             Route::get('/rh/reporteEmpleado' , 'reporteEmpleado');
         });
     });
-
-
-    // Route::controller(GestionarUsuarios::class)->group(function(){
-    //     Route::get('/sistemas/gestionarUsuarios' , 'index')->name('gestionarUsuarios.index');
-    //     Route::get('/sistemas/crearUsuario' , 'store');
-    //     Route::get('/sistemas/all' , 'all');
-    //     Route::post('/sistemas/update' , 'update');
-    //     Route::post('/sistemas/delete' , 'destroy');
-    //     Route::post('/sistemas/create' , 'create');
-    // });
 
 
     Route::controller(Permisos::class)->group(function(){

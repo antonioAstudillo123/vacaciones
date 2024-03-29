@@ -15,13 +15,5 @@
                 </a>
             </li>
         @endcan
-        @can('empleados')
-            <li class="nav-item">
-                <a href="../index2.html" class="nav-link">
-                    <i class="far fa-circle nav-icon text-primary"></i>
-                    <p>Empleados</p>
-                </a>
-            </li>
-        @endcan
     </ul>
 </li>

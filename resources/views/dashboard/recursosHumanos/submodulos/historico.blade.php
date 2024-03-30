@@ -72,6 +72,8 @@
 <script src="{{ asset('js/datatable/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/datatable/dataTables.js') }}"></script>
 <script src="{{ asset('js/datatable/dataTables.bootstrap5.js') }}"></script>
+<script src="{{ asset('js/datatable/dataTables.responsive.js') }}"></script>
+<script src="{{ asset('js/datatable/responsive.dataTables.js') }}"></script>
 
  {{-- CDN NECESARIO PARA GENERAR EL ARCHIVO EXCEL --}}
  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.core.min.js" integrity="sha512-UhlYw//T419BPq/emC5xSZzkjjreRfN3426517rfsg/XIEC02ggQBb680V0VvP+zaDZ78zqse3rqnnI5EJ6rxA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

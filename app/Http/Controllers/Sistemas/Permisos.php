@@ -36,26 +36,26 @@ class Permisos extends Controller
 
 
         //asignamos permisos a un rol
-        // $role = Role::findByName('administrador');
+        $role = Role::findByName('colaborador');
 
 
-        // //Asignamos permisos a role
-        // $permissions = Permission::whereIn('name',
-        // [
-        //     'solicitar vacaciones' ,
-        //     'gestionar solicitudes',
-        //     'solicitudes',
-        //     'gestionar colaboradores',
-        //     'recursos humanos',
-        //     'sistemas'
-        // ])->get();
+         //Asignamos permisos a role
+        $permissions = Permission::whereIn('name',
+        [
+            'solicitar vacaciones' ,
+            // 'gestionar solicitudes',
+            // 'solicitudes',
+            // 'gestionar colaboradores',
+            // 'recursos humanos',
+            // 'sistemas'
+        ])->get();
 
-        // $role->syncPermissions($permissions);
+        $role->syncPermissions($permissions);
 
-             // Asignar un rol al usuario
-        // $user = User::find(6);
+        //Asignar un rol al usuario
+        // $user = User::find(79);
 
-        // $role = Role::findByName('administrador');
+        // $role = Role::findByName('colaborador');
         // $user->assignRole($role);
     }
 

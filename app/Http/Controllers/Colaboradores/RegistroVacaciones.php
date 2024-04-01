@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Colaboradores;
 
 use Illuminate\Http\Request;
+use App\Mail\CorreoSolicitud;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class RegistroVacaciones extends Controller
 {
@@ -134,6 +137,28 @@ class RegistroVacaciones extends Controller
                     }
 
                 });
+
+                try
+                {
+
+                $resultado =  DB::table('empleados')
+                        ->select('colaborador', 'correo')
+                        ->where('id', function ($query) use($empleado) {
+                            $query->select('idJefe')
+                                ->from('empleados')
+                                ->where('id',  $empleado[0]->id);
+                        })
+                        ->first();
+
+
+                    $nombreEmpleado = Auth::user()->name;
+                    $nombreJefe = $resultado->colaborador;
+
+                    Mail::to('antonio.astudillo@univer-gdl.edu.mx')->send(new CorreoSolicitud( $nombreJefe , $nombreEmpleado , $data['data']));
+                } catch (\Throwable $th) {
+                    Log::error('Error al enviar correo electrónico: ' . $th->getMessage());
+                }
+
             }else{
                 return response('La cantidad de días de vacaciones que has solicitado sobrepasa el límite anual permitido. Por favor, verifica esta situación con el Departamento de Recursos Humanos para obtener más información.' , 422);
             }

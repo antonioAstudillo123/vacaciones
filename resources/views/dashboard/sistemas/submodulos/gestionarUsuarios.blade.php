@@ -49,6 +49,7 @@
 @include('dashboard.sistemas.modals.editUser')
 @include('dashboard.sistemas.modals.confirmDelete')
 @include('dashboard.sistemas.modals.addUser')
+@include('dashboard.sistemas.modals.permisosUser')
 
 @endsection
 

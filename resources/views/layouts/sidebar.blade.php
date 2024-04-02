@@ -1,7 +1,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-collapse sidebar-light-navy  elevation-4">
     <!-- Brand Logo -->
-    <a href="../index3.html" class="brand-link">
+    <a href="{{ route('home') }}" class="brand-link">
       <img src="{{ asset('img/univer_log.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="">
       <span class="brand-text font-weight-light">Univer</span>
     </a>

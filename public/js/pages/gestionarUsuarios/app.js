@@ -1,4 +1,4 @@
-import {peticionUpdateUser , peticionEliminarUser , peticionAddUser} from '../../ajax.js';
+import {peticionUpdateUser , peticionEliminarUser , peticionAddUser , peticionChangeRole} from '../../ajax.js';
 import { mensajeAlert } from "../../auxiliares.js";
 window.onload = main;
 
@@ -39,6 +39,10 @@ function datatable()
             {
                 defaultContent: `
                     <div class='container d-flex justify-content-center'>
+                    <button class='permisos btn btn-info btn-sm mr-2' data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Modificar roles">
+                        <i class="fas fa-user-cog"></i>
+                    </button>
                         <button class='editar btn btn-warning btn-sm mr-2' data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Editar información">
                             <i class="fa-solid fa-pen-to-square"></i>
@@ -79,6 +83,7 @@ function obtener_data(tbody, tabla)
     let data = [];
 
 
+    //Evento para modificar
     $(tbody).on("click", "button.editar", function () {
         data = tabla.row($(this).closest("tr")).data();
         $('#editUserModal').modal('show');
@@ -86,10 +91,21 @@ function obtener_data(tbody, tabla)
     });
 
 
+    //Evento para eliminar
     $(tbody).on("click", "button.eliminar", function () {
         data = tabla.row($(this).closest("tr")).data();
         $('#modalConfirmDeleteUser').modal('show');
         document.getElementById('btnAprobarSolicitud').value = data.id;
+
+    });
+
+
+    //Evento de permisos
+    $(tbody).on("click", "button.permisos", function () {
+        data = tabla.row($(this).closest("tr")).data();
+        $('#permisoUserModal').modal('show');
+        permisosUserModal(data);
+
 
     });
 }
@@ -133,6 +149,10 @@ function eventos()
 
     //Evento para guardar usuario en el sistema
     document.getElementById('btnSaveUser').addEventListener('click' , saveUser);
+
+
+    //Le agregamos evento al boton de guardar cambios en permisos
+    document.getElementById('btnAddRolePermiso').addEventListener('click' , saveRoleUser);
 }
 
 
@@ -204,4 +224,32 @@ function saveUser()
 
         peticionAddUser('/sistemas/create' , 'POST' , data);
     }
+}
+
+
+function permisosUserModal(data)
+{
+    document.getElementById('nameUserPermisos').value = data.name;
+    document.getElementById('emailUserPermisos').value = data.email;
+}
+
+
+function saveRoleUser()
+{
+
+    if(document.getElementById('perfilesUserPermisos').value === '')
+    {
+        mensajeAlert('Error!' , 'Debe seleccionar un perfil.' , 'error');
+    }else{
+        let email = document.getElementById('emailUserPermisos').value;
+        let role = document.getElementById('perfilesUserPermisos').value;
+
+        const data = {
+            email : email ,
+            role:role
+        }
+
+        peticionChangeRole('/sistemas/permisos/change' , 'POST' , data);
+    }
+
 }

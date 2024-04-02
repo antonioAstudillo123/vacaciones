@@ -29,7 +29,7 @@ class Permisos extends Controller
         // Permission::create(['name' => 'recursos humanos']);
         // Permission::create(['name' => 'sistemas']);
 
-        //Creamos roles
+        // //Creamos roles
         // Role::create(['name' => 'administrador']);
         // Role::create(['name' => 'humanos']);
         // Role::create(['name' => 'colaborador']);
@@ -39,7 +39,7 @@ class Permisos extends Controller
         $role = Role::findByName('colaborador');
 
 
-         //Asignamos permisos a role
+        // // Asignamos permisos a role
         $permissions = Permission::whereIn('name',
         [
             'solicitar vacaciones' ,
@@ -53,9 +53,9 @@ class Permisos extends Controller
         $role->syncPermissions($permissions);
 
         //Asignar un rol al usuario
-        // $user = User::find(79);
+        // $user = User::find(1);
 
-        // $role = Role::findByName('colaborador');
+        // $role = Role::findByName('administrador');
         // $user->assignRole($role);
     }
 

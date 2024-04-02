@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sistemas;
 
 use Exception;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -11,6 +12,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use App\Traits\Paginador as PaginadorTrait;
+use Spatie\Permission\Models\Role;
+
 
 class GestionarUsuarios extends Controller
 {
@@ -24,8 +27,10 @@ class GestionarUsuarios extends Controller
 
         $colaboradores = DB::table('empleados')->select('numeroEmpleado' , 'colaborador')->where('idUser' , '=' , null)->get();
 
+        $planteles = DB::table('planteles')->select('id' , 'nombre')->get();
+        $roles = DB::table('roles')->select('id' , 'name')->get();
 
-        return view('dashboard.sistemas.submodulos.gestionarUsuarios' , ['colaboradores' => $colaboradores]);
+        return view('dashboard.sistemas.submodulos.gestionarUsuarios' , ['colaboradores' => $colaboradores , 'planteles' => $planteles , 'roles' => $roles]);
     }
 
 
@@ -90,29 +95,32 @@ class GestionarUsuarios extends Controller
 
 
         $resultados = DB::table('empleados')
-        ->select('id','colaborador' , 'numeroEmpleado')
+        ->select('id','colaborador' , 'correo' , 'numeroEmpleado')
         ->get();
 
-
-        foreach ($resultados as $item)
+        DB::transaction(function () use($resultados)
         {
-
-            DB::transaction(function () use($item)
+            foreach ($resultados as $item)
             {
-                $id = DB::table('users')->insertGetId(
-                    [
-                        'name' => $item->colaborador,
-                        'password' => Hash::make('Univer#0'),
-                        'email' =>  $item->numeroEmpleado . '@gmail.com',
-                    ]
-                );
 
-                DB::table('empleados')
-                ->where('id', $item->id)
-                ->update(['idUser' => $id]);
-            });
+                if($item->correo !== '')
+                {
+                    $id = DB::table('users')->insertGetId(
+                        [
+                            'name' => $item->colaborador,
+                            'password' => Hash::make('Univer#0'),
+                            'email' =>  $item->correo,
+                        ]
+                    );
 
-        }
+                    DB::table('empleados')
+                    ->where('id', $item->id)
+                    ->update(['idUser' => $id]);
+                }
+
+            }
+
+    });
 
 
         return 'Proceso finalizado';
@@ -230,6 +238,33 @@ class GestionarUsuarios extends Controller
                 'password' => Hash::make('Univer10')
             ]
         );
+     }
+
+
+     public function changePermisos(Request $request)
+     {
+        // $data = $request->all();
+        // $usuarios = User::all();
+
+        // $role = Role::findByName('colaborador');
+
+        // foreach ($usuarios as $usuario) {
+        //     $usuario->assignRole($role);
+        // }
+
+
+
+        // $usuario = User::where('email', $data['email'])->first();
+
+        // $role = Role::findByName($data['role']);
+
+        // if($usuario->assignRole($role))
+        // {
+        //     return response('Perfil agregado con éxito' , 200);
+        // }else{
+        //     return response('Error al agregar el perfil' , 500);
+        // }
+
      }
 
 }

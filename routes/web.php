@@ -9,6 +9,7 @@ use App\Http\Controllers\Colaboradores\GestionarSolicitudes;
 
 Route::redirect('/', '/login');
 
+
 Route::middleware(['auth'])->group(function()
 {
     Route::group(['middleware' => ['can:sistemas,gestionar colaboradores']  ], function()
@@ -20,6 +21,8 @@ Route::middleware(['auth'])->group(function()
             Route::post('/sistemas/update' , 'update');
             Route::post('/sistemas/delete' , 'destroy');
             Route::post('/sistemas/create' , 'create');
+            Route::post('/sistemas/permisos/change' , 'changePermisos');
+
         });
 
     });

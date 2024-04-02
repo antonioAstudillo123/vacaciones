@@ -203,6 +203,8 @@ function saveUser()
     let user = document.getElementById('userNameAdd').value;
     let email = document.getElementById('emailUserAdd').value;
     let password = document.getElementById('passwordAdd').value;
+    let colaborador = document.getElementById('colaboradorUserAdd').value;
+    let role = document.getElementById('roleUserAddSelect').value;
 
 
     if(user === '')
@@ -214,12 +216,21 @@ function saveUser()
     }else if(password === '')
     {
         mensajeAlert('Error!' , 'Debe ingresar un password!' , 'error');
-    }else{
+    }else if(colaborador === '')
+    {
+        mensajeAlert('Error!' , 'Debe seleccionar un colaborador!' , 'error');
+    }else if(role === '')
+    {
+        mensajeAlert('Error!' , 'Debe seleccionar el perfil que va tener este colaborador!' , 'error');
+    }
+    else{
 
         const data = {
             email:email,
             user:user,
-            password:password
+            password:password,
+            colabordor:colaborador,
+            role:role,
         }
 
         peticionAddUser('/sistemas/create' , 'POST' , data);

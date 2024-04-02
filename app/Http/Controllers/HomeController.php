@@ -41,59 +41,37 @@ class HomeController extends Controller
                  ->get();
 
 
-        switch($role)
+
+        $fechaInicio = Carbon::createFromFormat('Y-m-d',$empleado[0]->fechaIngreso);
+
+        //Generamos la fecha actual para poder crear la operacion de la diferencia de años
+        $fechaFin = Carbon::createFromFormat('d/m/Y', Carbon::now()->format('d/m/Y'));
+
+        //Obtenemos la diferencia de años que existe entre el año en el que el usuario ingreso y el año actual
+        $diffYears = $fechaInicio->diffInYears($fechaFin);
+
+
+        $diasVacaciones = DB::table('dias_vacaciones')
+            ->select('dias')
+            ->where('anios', '=', $diffYears)
+            ->get();
+
+
+        $resultado = DB::table('solicitud_vacaciones')
+            ->select(DB::raw('sum(dias) as totalDias'))
+            ->where('id_empleado', $empleado[0]->id)
+            ->where('estatus', 'Aprobada')
+            ->first();
+
+
+        if(isset($diasVacaciones[0]->dias))
         {
-            case'administrador':
-
-                break;
-            case'colaborador':
-
-            //Generamos la fecha en la que el empleado ingreso a trabajar
-            $fechaInicio = Carbon::createFromFormat('Y-m-d',$empleado[0]->fechaIngreso);
-
-            //Generamos la fecha actual para poder crear la operacion de la diferencia de años
-            $fechaFin = Carbon::createFromFormat('d/m/Y', Carbon::now()->format('d/m/Y'));
-
-            //Obtenemos la diferencia de años que existe entre el año en el que el usuario ingreso y el año actual
-            $diffYears = $fechaInicio->diffInYears($fechaFin);
-
-
-            $diasVacaciones = DB::table('dias_vacaciones')
-                ->select('dias')
-                ->where('anios', '=', $diffYears)
-                ->get();
-
-
-               $resultado = DB::table('solicitud_vacaciones')
-                    ->select(DB::raw('sum(dias) as totalDias'))
-                    ->where('id_empleado', $empleado[0]->id)
-                    ->where('estatus', 'Aprobada')
-                    ->first();
-
-
-                if(isset($diasVacaciones[0]->dias))
-                {
-                    $diasDisponibles = $diasVacaciones[0]->dias - $resultado->totalDias;
-                }else{
-                    $diasDisponibles = 0;
-                }
-
-
-
-
-                    return view('home' , ['role' => $role , 'diasDisponibles' => $diasDisponibles , 'diasUtilizados' => $resultado->totalDias ? $resultado->totalDias : 0 ]);
-
-
-                break;
-            case'humanos':
-
-            break;
-
+            $diasDisponibles = $diasVacaciones[0]->dias - $resultado->totalDias;
+        }else{
+            $diasDisponibles = 0;
         }
 
-
-        return view('home' , ['role' => $role ]);
-
+        return view('home' , ['role' => $role , 'diasDisponibles' => $diasDisponibles , 'diasUtilizados' => $resultado->totalDias ? $resultado->totalDias : 0 ]);
 
     }
 }

@@ -193,9 +193,6 @@ class GestionarUsuarios extends Controller
         return response('Usuario eliminado con éxito' , 200);
     }
 
-
-
-
     /**
      * Creamos un nuevo usuario en el sistema
      */
@@ -204,26 +201,33 @@ class GestionarUsuarios extends Controller
      {
         $data = $request->all();
 
-        try {
+        DB::transaction(function () use ($data)
+        {
+            try
+            {
+                $id = DB::table('users')->insertGetId(
+                    [
+                        'name' => Str::title($data['user']),
+                        'email' => $data['email'] ,
+                        'password' => Hash::make($data['password']),
+                        'created_at' => Carbon::now()
+                    ]
+                );
 
-            DB::table('users')->insert(
-                [
-                    'name' => Str::title($data['user']),
-                    'email' => $data['email'] ,
-                    'password' => Hash::make($data['password']),
-                    'created_at' => Carbon::now()
-                ]
-            );
+                DB::table('empleados')
+                    ->where('numeroEmpleado', '=' , $data['colabordor'])
+                    ->update(['idUser' => $id]);
 
-        } catch (QueryException  $th) {
+                $user = User::find($id);
+                $role = Role::findByName($data['role']);
+                $user->assignRole($role);
 
-            if ($th->errorInfo[1] == 1062) {
-                return response('El correo ingresado ya existe!' , 500);
-            }else{
-                return response('Tuvimos problemas al procesar la solicitud!' , 500);
+            } catch (QueryException  $th)
+            {
+                throw $th;
             }
+        });
 
-        }
 
         return response('Usuario agregado correctamente' , 200);
      }
@@ -243,27 +247,16 @@ class GestionarUsuarios extends Controller
 
      public function changePermisos(Request $request)
      {
-        // $data = $request->all();
-        // $usuarios = User::all();
+        try
+        {
+            $data = $request->all();
+            $user = User::where('email', $data['email'])->first();
+            $user->syncRoles($data['role']);
+        } catch (\Throwable $th) {
+            return response('No pudimos actualizar el role' , 500);
+        }
 
-        // $role = Role::findByName('colaborador');
-
-        // foreach ($usuarios as $usuario) {
-        //     $usuario->assignRole($role);
-        // }
-
-
-
-        // $usuario = User::where('email', $data['email'])->first();
-
-        // $role = Role::findByName($data['role']);
-
-        // if($usuario->assignRole($role))
-        // {
-        //     return response('Perfil agregado con éxito' , 200);
-        // }else{
-        //     return response('Error al agregar el perfil' , 500);
-        // }
+        return response('Perfil actualizado correctamente' , 200);
 
      }
 

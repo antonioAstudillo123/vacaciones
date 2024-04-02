@@ -29,12 +29,24 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="passwordAdd" class="col-sm-2 col-form-label">Colaboradores</label>
+                    <label for="colaboradorUserAdd" class="col-sm-2 col-form-label">Colaboradores</label>
                     <div class="col-sm-10">
-                        <select class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
-                            <option selected disabled>Elige un colaborador</option>
+                        <select id="colaboradorUserAdd" class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
+                            <option value="" selected disabled>Elige un colaborador</option>
                             @foreach ($colaboradores as $colaborador )
                                 <option value="{{ $colaborador->numeroEmpleado }}">{{ $colaborador->numeroEmpleado }} - {{ $colaborador->colaborador }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="roleUserAddSelect" class="col-sm-2 col-form-label">Perfiles</label>
+                    <div class="col-sm-10">
+                        <select id="roleUserAddSelect" class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
+                            <option value="" selected disabled>Elige un perfil</option>
+                            @foreach ($roles as $role )
+                                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
                             @endforeach
                         </select>
                     </div>

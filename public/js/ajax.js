@@ -265,7 +265,6 @@ export function peticionChangeRole(url , type , data)
             data:data,
             success: function(response)
             {
-                console.log(response);
                 Swal.fire({
                     title: 'Buen trabajo!',
                     text: response,

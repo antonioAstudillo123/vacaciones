@@ -14,7 +14,27 @@
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="User Image" class="img-circle elevation-2">
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+          <a href="#" class="d-block">
+
+            @php
+
+                try {
+                    $cadena = Auth::user()->name;
+                    $array = explode(" ", $cadena);
+
+                    if(isset($array[2]))
+                    {
+                        echo   ($array[2]) . ' ' . $array[0];
+                    }else{
+                        echo    $array[0] .  ' ' . $array[1];
+                    }
+                } catch (Exception  $th) {
+                    echo 'Usuario Univer';
+                }
+
+            @endphp
+
+            </a>
         </div>
       </div>
 

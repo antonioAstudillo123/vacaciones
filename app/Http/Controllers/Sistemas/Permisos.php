@@ -33,17 +33,18 @@ class Permisos extends Controller
         // Role::create(['name' => 'administrador']);
         // Role::create(['name' => 'humanos']);
         // Role::create(['name' => 'colaborador']);
+        Role::create(['name' => 'jefe']);
 
 
         //asignamos permisos a un rol
-        $role = Role::findByName('colaborador');
+        $role = Role::findByName('jefe');
 
 
         // // Asignamos permisos a role
         $permissions = Permission::whereIn('name',
         [
             'solicitar vacaciones' ,
-            // 'gestionar solicitudes',
+            'gestionar solicitudes',
             // 'solicitudes',
             // 'gestionar colaboradores',
             // 'recursos humanos',

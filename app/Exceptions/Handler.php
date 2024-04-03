@@ -4,8 +4,8 @@ namespace App\Exceptions;
 
 use Illuminate\Database\QueryException;
 use Throwable;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -28,6 +28,11 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+
+        $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
+            return response()->view('error', [], 500);
+        });
     }
 
     public function render($request, \Throwable $exception)
@@ -43,4 +48,6 @@ class Handler extends ExceptionHandler
 
         return parent::render($request, $exception);
     }
+
+
 }

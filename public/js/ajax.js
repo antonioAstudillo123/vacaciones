@@ -281,3 +281,35 @@ export function peticionChangeRole(url , type , data)
         });
 }
 
+//Con esta funcion podemos actualizar las contraseñas de un usuario autenticado
+export function peticionActualizarPassword(url , type , data)
+{
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+    });
+
+    $.ajax({
+            type: type,
+            url: url,
+            data:data,
+            success: function(response)
+            {
+                Swal.fire({
+                    title: 'Buen trabajo!',
+                    text: response,
+                    icon: 'success'
+                  }).then(()=>{
+                     //actualizamos el form de actualizacion de contraseña
+                     document.getElementById('formUpdatePassword').reset();
+                  });
+            },
+            error: function(error)
+            {
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+            }
+        });
+}

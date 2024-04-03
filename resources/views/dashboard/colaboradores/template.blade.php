@@ -25,5 +25,11 @@
                 </a>
             </li>
         @endcan
+        <li class="nav-item">
+            <a href="{{ route('colaboradores.password.reset') }}" class="nav-link">
+                <i class="far fa-circle nav-icon text-primary"></i>
+                <p>Modificar password</p>
+            </a>
+        </li>
     </ul>
 </li>

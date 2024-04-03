@@ -8,11 +8,12 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use App\Traits\Paginador as PaginadorTrait;
-use Spatie\Permission\Models\Role;
 
 
 class GestionarUsuarios extends Controller
@@ -234,14 +235,24 @@ class GestionarUsuarios extends Controller
 
 
 
-     public function actualizarPassword()
+     public function updatePassword(Request $request)
      {
-        DB::table('users')
-        ->update(
-            [
-                'password' => Hash::make('Univer10')
-            ]
-        );
+
+        try {
+                $id = Auth::user()->id;
+
+                DB::table('users')
+                ->where('id' , $id)
+                ->update(
+                    [
+                        'password' => Hash::make($request->input('password'))
+                    ]
+                );
+        } catch (\Throwable $th) {
+           return response('Tuvimos problemas para actualizar la contraseña' , 500);
+        }
+
+        return response('Contraseñas actualizadas correctamente!' , 200);
      }
 
 
@@ -258,6 +269,13 @@ class GestionarUsuarios extends Controller
 
         return response('Perfil actualizado correctamente' , 200);
 
+     }
+
+
+     //Metodo para  visualizar la vista de resetPassword
+     function resetPassword()
+     {
+       return view('resetPassword');
      }
 
 }

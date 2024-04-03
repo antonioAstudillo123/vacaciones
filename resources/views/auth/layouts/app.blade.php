@@ -28,7 +28,6 @@
         </main>
     </div>
 
-
     @yield('scriptsPagina')
 </body>
 </html>

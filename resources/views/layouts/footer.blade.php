@@ -4,3 +4,4 @@
     </div>
     <strong>Copyright &copy;{{ date('Y') }} <a href="">Univer</a>.</strong> Todos los derechos reservados.
   </footer>
+     {{-- SCRIPT DE configuracion para cambio de contraseña --}}

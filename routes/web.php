@@ -12,6 +12,14 @@ Route::redirect('/', '/login');
 
 Route::middleware(['auth'])->group(function()
 {
+
+    Route::controller(GestionarUsuarios::class)->group(function(){
+        Route::get('/colaboradores/password/reset' , 'resetPassword')->name('colaboradores.password.reset');
+        Route::post('/colaboradores/password/reset' , 'updatePassword');
+    });
+
+
+
     Route::group(['middleware' => ['can:sistemas,gestionar colaboradores']  ], function()
     {
         Route::controller(GestionarUsuarios::class)->group(function(){
@@ -22,7 +30,6 @@ Route::middleware(['auth'])->group(function()
             Route::post('/sistemas/delete' , 'destroy');
             Route::post('/sistemas/create' , 'create');
             Route::post('/sistemas/permisos/change' , 'changePermisos');
-
         });
 
     });
@@ -62,11 +69,18 @@ Route::middleware(['auth'])->group(function()
         Route::get('/permisos/create' , 'create');
     });
 
-
-
 });
 
 
-Auth::routes();
+// Auth::routes();
+
+Auth::routes(
+    [
+        'register' => false,
+        'reset' => false,
+    ]
+
+);
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

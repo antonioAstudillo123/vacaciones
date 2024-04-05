@@ -155,6 +155,7 @@ class RegistroVacaciones extends Controller
                     $nombreJefe = $resultado->colaborador;
 
                     Mail::to($resultado->correo)->send(new CorreoSolicitud( $nombreJefe , $nombreEmpleado , $data['data']));
+
                 } catch (\Throwable $th) {
                     Log::error('Error al enviar correo electrónico: ' . $th->getMessage());
                 }

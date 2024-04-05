@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Colaboradores;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Mail\RechazoSolicitud;
+use App\Mail\SolicitudAprobada;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Traits\Paginador as PaginadorTrait;
 
 class GestionarSolicitudes extends Controller
@@ -104,11 +108,39 @@ class GestionarSolicitudes extends Controller
 
     public function aprobarSolicitud(Request $request)
     {
-        try {
+        DB::beginTransaction();
+
+        try
+        {
             DB::table($this->tablaSolicitudes)
               ->where('id', $request->input('id'))
               ->update(['estatus' => 'Aprobada']);
-        } catch (Exception $th) {
+
+
+              $empleado = DB::table('empleados')
+              ->join('solicitud_vacaciones as sv', function ($join) use ($request){
+                  $join->on('sv.id_empleado', '=', 'empleados.id')
+                      ->where('sv.id', '=', $request->input('id'));
+              })
+              ->select('empleados.correo' , 'empleados.colaborador')
+              ->first();
+
+
+              $dias = DB::table('solicitud_vacaciones_detalle')
+              ->select('fecha')
+              ->where('id_solicitud', '=', $request->input('id'))
+              ->get();
+
+            Mail::to($empleado->correo)->send(new SolicitudAprobada($empleado->colaborador , $dias[0]->fecha ,  $dias[count($dias)-1]->fecha ));
+
+            DB::commit();
+
+        } catch (Exception $th)
+        {
+            DB::rollback();
+
+            Log::error('Error al enviar correo: ' . $th->getMessage());
+
             return response('Tuvimos problemas al actualizar la solicitud' , 500);
         }
 
@@ -118,7 +150,11 @@ class GestionarSolicitudes extends Controller
 
     public function rechazarSolicitud(Request $request)
     {
-        try {
+
+        DB::beginTransaction();
+
+        try
+        {
             DB::table($this->tablaSolicitudes)
               ->where('id', $request->input('id'))
               ->update(
@@ -128,7 +164,23 @@ class GestionarSolicitudes extends Controller
 
                 ]
             );
+
+            $empleado = DB::table('empleados')
+            ->join('solicitud_vacaciones as sv', function ($join) use ($request) {
+                $join->on('sv.id_empleado', '=', 'empleados.id')
+                    ->where('sv.id', '=', $request->input('id'));
+            })
+            ->select('empleados.correo' , 'empleados.colaborador')
+            ->first();
+
+            Mail::to($empleado->correo)->send(new RechazoSolicitud( $empleado->colaborador  , $request->input('motivo')));
+
+            DB::commit();
+
         } catch (Exception $th) {
+            DB::rollback();
+            Log::error('Error al enviar correo: ' . $th->getMessage());
+
             return response('Tuvimos problemas al actualizar la solicitud', 500);
         }
 

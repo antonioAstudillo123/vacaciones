@@ -9,16 +9,28 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EnvioCorreoPendientes extends Mailable
+
+/**}
+ * Esta clase la voy a usar para enviar un correo a un colaborador dentro del sistema
+ */
+
+class EnvioCorreo extends Mailable
 {
     use Queueable, SerializesModels;
+
+    public $nombreJefe;
+    public $nombreEmpleado;
+    public $fechaInicio;
+
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($nombreJefe , $nombreEmpleado , $fechaInicio)
     {
-        //
+        $this->nombreJefe = $nombreJefe;
+        $this->nombreEmpleado = $nombreEmpleado;
+        $this->fechaInicio = $fechaInicio;
     }
 
     /**
@@ -27,7 +39,7 @@ class EnvioCorreoPendientes extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Envio Correo Pendientes',
+            subject: 'Recordatorio: Solicitud de Vacaciones Pendiente de Aprobación',
         );
     }
 
@@ -37,7 +49,7 @@ class EnvioCorreoPendientes extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'dashboard.mails.solicitudSinAprobar',
         );
     }
 

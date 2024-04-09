@@ -120,6 +120,7 @@ class RegistroVacaciones extends Controller
                         [
                             'id_empleado' => $empleado[0]->id,
                             'fecha' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'fechaInicio' =>  $data['data'][0],
                             'dias' => $diasPedidos,
                             'observaciones' => null,
                             'estatus' => 'Pendiente',
@@ -141,7 +142,7 @@ class RegistroVacaciones extends Controller
                 try
                 {
 
-                $resultado =  DB::table('empleados')
+                    $resultado =  DB::table('empleados')
                         ->select('colaborador', 'correo')
                         ->where('id', function ($query) use($empleado) {
                             $query->select('idJefe')
@@ -154,7 +155,7 @@ class RegistroVacaciones extends Controller
                     $nombreEmpleado = Auth::user()->name;
                     $nombreJefe = $resultado->colaborador;
 
-                    Mail::to($resultado->correo)->send(new CorreoSolicitud( $nombreJefe , $nombreEmpleado , $data['data']));
+                   Mail::to($resultado->correo)->send(new CorreoSolicitud( $nombreJefe , $nombreEmpleado , $data['data']));
 
                 } catch (\Throwable $th) {
                     Log::error('Error al enviar correo electrónico: ' . $th->getMessage());

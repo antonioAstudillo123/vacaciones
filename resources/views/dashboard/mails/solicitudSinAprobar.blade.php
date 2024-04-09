@@ -5,7 +5,7 @@
     <p>Estimado {{ $nombreJefe }},</p>
 
 
-<p>Este es un recordatorio automático del sistema para informarle que la solicitud de vacaciones presentada por {{ $nombreEmpleado }} para el período que comienza mañana, {{ $fechaInicio }}, aún está pendiente de su aprobación.</p>
+<p>Este es un recordatorio automático del sistema para informarle que la solicitud de vacaciones presentada por {{ $nombreEmpleado }} que comienza mañana, {{ $fechaInicio }}, aún está pendiente de su aprobación.</p>
 
 <p>Dado que el período de vacaciones está programado para iniciar pronto, es crucial que se tome una decisión sobre esta solicitud a la brevedad posible.</p>
 

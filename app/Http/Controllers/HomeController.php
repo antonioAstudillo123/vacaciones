@@ -8,17 +8,18 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
+use App\Services\Correos\ComprobarSolicitudes;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    private $servicio;
+
+    public function __construct(ComprobarSolicitudes $servicio)
     {
         $this->middleware('auth');
+
+
+        $this->servicio = $servicio;
     }
 
     /**
@@ -73,5 +74,12 @@ class HomeController extends Controller
 
         return view('home' , ['role' => $role , 'diasDisponibles' => $diasDisponibles , 'diasUtilizados' => $resultado->totalDias ? $resultado->totalDias : 0 ]);
 
+    }
+
+
+    //Metodo de prueba
+    public function prueba()
+    {
+        $this->servicio->comprobar();
     }
 }

@@ -29,7 +29,8 @@ class EnvioCorreo extends Command
         // de fecha de inicio de periodo vacacional este cerca.
     public function handle()
     {
-        try{
+        try
+        {
             Mail::to('antonio.astudillo@univer-gdl.edu.mx')->send(new EnvioCorreoMail( 'Antonio Astudillo' , 'Oscar de la Hoya' , '05/04/2024'));
         } catch (Exception $th){
             Log::error('Error al enviar correo: ' . $th->getMessage());

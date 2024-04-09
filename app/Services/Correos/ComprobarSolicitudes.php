@@ -1,10 +1,10 @@
 <?php
  namespace App\Services\Correos;
 
-
-
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EnvioCorreo as EnvioCorreoMail;
 use App\repositories\correos\SolicitudRepository;
 
  class ComprobarSolicitudes{
@@ -16,15 +16,21 @@ use App\repositories\correos\SolicitudRepository;
         $this->repositorio = $repositorio;
     }
 
+    /**
+     * Este servicio lo que hace es leer todas las solicitudes que tengan
+     * un estatus como pendientes de aprobar, posteriormente
+     *
+     * @return void
+     */
     public function comprobar()
     {
         $data = $this->repositorio->leerSolicitudes('Pendiente');
         $tomorrow = Carbon::createFromFormat('d/m/Y', Carbon::now()->format('d/m/Y'))->addDay();
 
-
-        foreach ($data as $registro) {
-
+        foreach ($data as $registro)
+        {
             $fechaAux = Carbon::createFromFormat('Y-m-d', $registro->fechaInicio);
+           // echo ++$contador . '<br>';
 
             if($fechaAux->eq($tomorrow))
             {
@@ -37,9 +43,7 @@ use App\repositories\correos\SolicitudRepository;
                 ->select('e1.correo' , 'e2.colaborador as nombreEmpleado' , 'e1.colaborador as nombreJefe')
                 ->first();
 
-                echo $empleado->correo . ' - ' . $empleado->nombreEmpleado.  '  - ' . $empleado->nombreJefe . '<br>';
-
-
+                Mail::to('antonio.astudillo@univer-gdl.edu.mx')->send(new EnvioCorreoMail( $empleado->nombreJefe , $empleado->nombreEmpleado , Carbon::parse($registro->fechaInicio)->format('d/m/Y') ));
 
             }
 

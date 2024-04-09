@@ -3,13 +3,22 @@
 namespace App\Console\Commands;
 
 use Exception;
-use App\Mail\EnvioCorreo as EnvioCorreoMail;
+
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Services\Correos\ComprobarSolicitudes;
 
 class EnvioCorreo extends Command
 {
+
+    private $servicio;
+
+    public function __construct(ComprobarSolicitudes $servicio)
+    {
+        parent::__construct();
+        $this->servicio = $servicio;
+    }
     /**
      * The name and signature of the console command.
      *
@@ -31,7 +40,7 @@ class EnvioCorreo extends Command
     {
         try
         {
-            Mail::to('antonio.astudillo@univer-gdl.edu.mx')->send(new EnvioCorreoMail( 'Antonio Astudillo' , 'Oscar de la Hoya' , '05/04/2024'));
+            $this->servicio->comprobar();
         } catch (Exception $th){
             Log::error('Error al enviar correo: ' . $th->getMessage());
         }

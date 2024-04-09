@@ -17,8 +17,6 @@ class HomeController extends Controller
     public function __construct(ComprobarSolicitudes $servicio)
     {
         $this->middleware('auth');
-
-
         $this->servicio = $servicio;
     }
 

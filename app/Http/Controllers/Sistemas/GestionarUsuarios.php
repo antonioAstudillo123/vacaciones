@@ -233,29 +233,6 @@ class GestionarUsuarios extends Controller
         return response('Usuario agregado correctamente' , 200);
      }
 
-
-
-     public function updatePassword(Request $request)
-     {
-
-        try {
-                $id = Auth::user()->id;
-
-                DB::table('users')
-                ->where('id' , $id)
-                ->update(
-                    [
-                        'password' => Hash::make($request->input('password'))
-                    ]
-                );
-        } catch (\Throwable $th) {
-           return response('Tuvimos problemas para actualizar la contraseña' , 500);
-        }
-
-        return response('Contraseñas actualizadas correctamente!' , 200);
-     }
-
-
      public function changePermisos(Request $request)
      {
         try

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sistemas\Permisos;
+use App\Http\Controllers\Colaboradores\Password;
 use App\Http\Controllers\RH\ConsultarSolicitudes;
 use App\Http\Controllers\Sistemas\GestionarUsuarios;
 use App\Http\Controllers\Colaboradores\RegistroVacaciones;
@@ -13,12 +14,10 @@ Route::redirect('/', '/login');
 Route::middleware(['auth'])->group(function()
 {
 
-    Route::controller(GestionarUsuarios::class)->group(function(){
-        Route::get('/colaboradores/password/reset' , 'resetPassword')->name('colaboradores.password.reset');
+    Route::controller(Password::class)->group(function(){
+        Route::get('/colaboradores/password/reset' , 'index')->name('colaboradores.password.reset');
         Route::post('/colaboradores/password/reset' , 'updatePassword');
     });
-
-
 
     Route::group(['middleware' => ['can:sistemas,gestionar colaboradores']  ], function()
     {

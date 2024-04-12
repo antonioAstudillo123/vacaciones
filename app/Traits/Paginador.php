@@ -25,16 +25,16 @@ trait Paginador{
     /**
      * Inicializamos todos los atributos del paginador
      */
-    public function inicializarAtributos(Request $request , $query)
+    public function inicializarAtributos(array $request , $query)
     {
         //Obtenemos el valor de la busqueda en caso de que exista
-        $this->busqueda =  $request->input('search.value');
+        $this->busqueda =  $request['value'];
 
         // Obtén el valor 'start' de la solicitud AJAX
-        $this->start = $request->input('start');
+        $this->start = $request['start'];
 
         // Obtén el número de registros por página
-        $this->registrosPorPagina = $request->input('length');
+        $this->registrosPorPagina = $request['length'];
 
         // Calcula la página actual
         $this->paginaActual = floor($this->start / $this->registrosPorPagina) + 1;
@@ -45,7 +45,7 @@ trait Paginador{
         //Utilizamos esta valor para evitar ataques CSRF, me lo manda datatable es un número entero que se incrementa
         //con cada solicitud de datatable, y debe ser reflejado en la respuesta del servidor sin cambios. Su principal funcion
        // es ayudar a Datatable a reconocer si la respuesta del servidor corresponde a la solicitud original o a una solicitud anterior
-        $this->draw = $request->input('draw');
+        $this->draw = $request['draw'];
 
         //Inicializamos la query que nos envian desde el controlador
         $this->query = $query;

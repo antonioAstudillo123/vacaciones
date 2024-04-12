@@ -29,7 +29,7 @@ function datatable()
             { data: "numeroEmpleado" },
             { data: "colaborador" },
             {data:'puestoNombre'},
-            { data: "fechaIngreso" },
+            { data: "fechaFormateada" },
             { data: "diasTomados" },
             {data:'diasRestante'},
             {

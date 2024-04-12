@@ -28,7 +28,7 @@ class ConsultarSolicitudes extends Controller
         $anioActual = date('Y');
 
         $resultados = DB::table('empleados as e')
-            ->select('e.id', 'e.numeroEmpleado', 'e.colaborador', 'e.fechaIngreso', 'puestos.nombre as puestoNombre' , DB::raw('SUM(sv.dias) AS diasTomados'))
+            ->select('e.id', 'e.numeroEmpleado', 'e.colaborador',DB::raw("DATE_FORMAT(e.fechaIngreso, '%d/%m/%Y') as fechaFormateada"), 'e.fechaIngreso', 'puestos.nombre as puestoNombre' , DB::raw('SUM(sv.dias) AS diasTomados'))
             ->leftJoin('solicitud_vacaciones AS sv', function($join) use ($anioActual) {
                 $join->on('e.id', '=', 'sv.id_empleado')
                     ->where('sv.estatus', '=', 'Aprobada')

@@ -5,30 +5,17 @@ namespace App\Http\Controllers\Colaboradores;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Mail\RechazoSolicitud;
-use App\Mail\SolicitudAprobada;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Traits\Paginador as PaginadorTrait;
 use App\Services\colaboradores\GestionarSolicitudes as  GestionarSolicitudesService;
 
 class GestionarSolicitudes extends Controller
 {
-    Use PaginadorTrait;
-    private $tablaEmpleados;
-    private $tablaSolicitudes;
-    private $tablaSolicitudesDetalle;
-    private $servicio;
 
+    private $servicio;
 
     public function __construct(GestionarSolicitudesService $servicio)
     {
-        $this->tablaEmpleados = 'empleados';
-        $this->tablaSolicitudes = 'solicitud_vacaciones';
-        $this->tablaSolicitudesDetalle = 'solicitud_vacaciones_detalle';
         $this->servicio = $servicio;
     }
 

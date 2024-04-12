@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Traits\Paginador as PaginadorTrait;
 use App\repositories\colaboradores\GestionarSolicitudes as GestionarSolicitudesRepository;
 
 class GestionarSolicitudes{
-    Use PaginadorTrait;
     Use Auxiliares;
     private $tablaEmpleados;
     private $tablaSolicitudes;

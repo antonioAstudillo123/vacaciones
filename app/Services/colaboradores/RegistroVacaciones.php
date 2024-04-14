@@ -49,7 +49,7 @@ class RegistroVacaciones
         $empleado = $this->getEmpleado($idUser);
 
         //Generamos la fecha en la que el empleado ingreso a trabajar
-        $fechaInicio = $this->setFechaInicio($$empleado[0]->fechaIngreso);
+        $fechaInicio = $this->setFechaInicio($empleado[0]->fechaIngreso);
 
         //Generamos la fecha actual para poder crear la operacion de la diferencia de años
         $fechaFin = $this->fechaActual();

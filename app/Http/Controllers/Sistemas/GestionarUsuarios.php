@@ -9,16 +9,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use App\Traits\Paginador as PaginadorTrait;
+use App\Services\Sistemas\GestionarUsuarios as GestionarUsuariosService;
 
 
 class GestionarUsuarios extends Controller
 {
     Use PaginadorTrait;
+    private $servicio;
+
+    public function __construct(GestionarUsuariosService $servicio)
+    {
+        $this->servicio = $servicio;
+    }
 
     public function index()
     {
@@ -26,9 +34,8 @@ class GestionarUsuarios extends Controller
          * Debemos de enviar la data con la que vamos a llenar los select's
          */
 
-        $colaboradores = DB::table('empleados')->select('numeroEmpleado' , 'colaborador')->where('idUser' , '=' , null)->get();
-
-        $planteles = DB::table('planteles')->select('id' , 'nombre')->get();
+        $colaboradores = $this->servicio->getEmpleadoSinUser();
+        $planteles = $this->servicio->getPlanteles();
         $roles = DB::table('roles')->select('id' , 'name')->get();
 
         return view('dashboard.sistemas.submodulos.gestionarUsuarios' , ['colaboradores' => $colaboradores , 'planteles' => $planteles , 'roles' => $roles]);
@@ -43,41 +50,20 @@ class GestionarUsuarios extends Controller
      */
     public function all(Request $request)
     {
-        $busqueda = $request->input('search.value');
+        $pagination = array(
+            'value' => $request->input('search.value'),
+            'start' => $request->input('start'),
+            'length' => $request->input('length'),
+            'draw' =>  $request->input('draw')
+        );
 
-        if(!empty($busqueda))
+        if(!empty($pagination['value']))
         {
-
-
-            $query = DB::table('users as u')
-            ->select('u.id', 'u.name', 'u.email', 'p.nombre as puesto', 'plan.nombre as plantel', 'a.nombre as nombreArea' ,'p.id as idPuesto' , 'plan.id as idPlantel' , 'a.id as idArea')
-            ->join('empleados as e', 'e.idUser', '=', 'u.id')
-            ->join('puestos as p', 'p.id', '=', 'e.idPuesto')
-            ->join('planteles as plan', 'plan.id', '=', 'e.idPlantel')
-            ->join('areas as a', 'a.id', '=', 'e.idArea')
-                ->where(function ($query) use ($busqueda) {
-                    $query->where('u.name', 'LIKE', '%' . $busqueda . '%')
-                        ->orWhere('u.email', 'LIKE', '%' . $busqueda . '%')
-                        ->orWhere('p.nombre', 'LIKE', '%' . $busqueda . '%');
-                });
-
-                $this->inicializarAtributos($request , $query);
-                $this->paginarBusqueda();
+            return $this->servicio->getUsersFiltros($pagination);
         }else{
-
-
-            $query = DB::table('users as u')
-            ->select('u.id', 'u.name', 'u.email', 'p.nombre as puesto', 'plan.nombre as plantel', 'a.nombre as nombreArea' ,'p.id as idPuesto' , 'plan.id as idPlantel' , 'a.id as idArea')
-            ->join('empleados as e', 'e.idUser', '=', 'u.id')
-            ->join('puestos as p', 'p.id', '=', 'e.idPuesto')
-            ->join('planteles as plan', 'plan.id', '=', 'e.idPlantel')
-            ->join('areas as a', 'a.id', '=', 'e.idArea');
-
-            $this->inicializarAtributos($request , $query);
-            $this->paginarTotal();
+            return $this->servicio->getUsers($pagination);
         }
 
-        return $this->respuesta();
     }
 
 
@@ -187,8 +173,8 @@ class GestionarUsuarios extends Controller
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         }catch(Exception $e){
-           // return response('Tuvimos problemas para eliminar al usuario' , 500);
-            return response($e , 500);
+            Log::error('Error en método destroy ERROR 004 ' . $th->getMessage());
+            return response('Tuvimos problemas para eliminar al usuario Error:004 ' , 200);
         }
 
         return response('Usuario eliminado con éxito' , 200);
@@ -219,6 +205,7 @@ class GestionarUsuarios extends Controller
                     ->where('numeroEmpleado', '=' , $data['colabordor'])
                     ->update(['idUser' => $id]);
 
+                // Le asignamos el role al usuario
                 $user = User::find($id);
                 $role = Role::findByName($data['role']);
                 $user->assignRole($role);

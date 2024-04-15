@@ -1,4 +1,4 @@
-import {peticionSolicitudVacaciones} from '../../ajax.js';
+import {peticionAsincrona} from '../../ajax.js';
 import { mensajeAlert } from '../../auxiliares.js';
 
 
@@ -76,7 +76,30 @@ $(function () {
                 auxArray.push(evento.start.toISOString().split('T')[0]);
             });
 
-            peticionSolicitudVacaciones('/colaboradores/registroVacaciones' , 'post' , {data:auxArray});
+           let respuesta =  peticionAsincrona('/colaboradores/registroVacaciones' , 'post' , {data:auxArray});
+
+           respuesta.then(function(resultado)  {
+            Swal.fire({
+                title: 'Buen trabajo!',
+                text: 'Las vacaciones fueron solicitadas con éxito!',
+                icon: 'success'
+              }).then(()=>{
+                location.reload();
+              });
+           }).catch(function(error)
+           {
+
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+
+                //Mostramos el boton de solicitar vacaciones
+                document.getElementById('btnSolicitar').classList.remove('d-none');
+
+                //Mostraos boton de spinner
+                document.getElementById('btnSolicitarSpinner').classList.add('d-none');
+
+                //Deshabilitamos el draggable
+                document.querySelector('.external-event').classList.remove('disabled');
+           });
 
         }
 

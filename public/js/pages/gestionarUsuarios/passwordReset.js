@@ -1,11 +1,12 @@
 import { mensajeAlert } from "../../auxiliares.js";
-import {peticionActualizarPassword} from '../../ajax.js';
+import {peticionAsincrona} from '../../ajax.js';
 
 window.onload = main;
 
 function main()
 {
     document.getElementById('updatePassword').addEventListener('click' , function(e){
+
         e.preventDefault();
 
         let password1 = document.getElementById('password1').value;
@@ -26,7 +27,22 @@ function main()
             const data = {
                 password:password1,
             }
-            peticionActualizarPassword('/colaboradores/password/reset' , 'POST' , data);
+
+            let respuesta = peticionAsincrona('/colaboradores/password/reset' , 'POST', data);
+
+            respuesta.then(function(resultado){
+                Swal.fire({
+                    title: 'Buen trabajo!',
+                    text: resultado,
+                    icon: 'success'
+                  }).then(()=>{
+                     //actualizamos el form de actualizacion de contraseña
+                     document.getElementById('formUpdatePassword').reset();
+                  });
+            }).catch(function(error){
+                mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+            });
+
         }
     });
 }

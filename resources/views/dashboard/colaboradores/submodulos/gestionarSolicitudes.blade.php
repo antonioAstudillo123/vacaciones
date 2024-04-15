@@ -27,13 +27,6 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        <tr>
-                            <td>1</td>
-                            <td>Hector Leon</td>
-                            <td>24-03-2024</td>
-                            <td>4</td>
-                            <td>Pendiente</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>

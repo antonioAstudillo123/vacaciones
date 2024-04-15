@@ -145,11 +145,12 @@ class GestionarUsuarios extends Controller
                     ],
                 );
             } catch (QueryException  $e) {
+                Log::error('Error 005:  ' . $e->getMessage());
                 throw $e;
-
             }
             catch(Exception $e)
             {
+                Log::error('Error 005:  ' . $e->getMessage());
                 throw $e;
             }
         });
@@ -162,8 +163,6 @@ class GestionarUsuarios extends Controller
     public function destroy(Request $request)
     {
         try{
-
-
             // Desactivar la verificación de claves foráneas
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
@@ -174,7 +173,7 @@ class GestionarUsuarios extends Controller
 
         }catch(Exception $e){
             Log::error('Error en método destroy ERROR 004 ' . $th->getMessage());
-            return response('Tuvimos problemas para eliminar al usuario Error:004 ' , 200);
+            return response('Tuvimos problemas para eliminar al usuario Error:004 ' , 500);
         }
 
         return response('Usuario eliminado con éxito' , 200);
@@ -212,6 +211,7 @@ class GestionarUsuarios extends Controller
 
             } catch (QueryException  $th)
             {
+                Log::error('Error en método destroy ERROR 006 ' . $th->getMessage());
                 throw $th;
             }
         });

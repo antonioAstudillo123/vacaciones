@@ -1,4 +1,4 @@
-import {peticionActualizacionEstatus} from '../../ajax.js';
+import {peticionAsincrona} from '../../ajax.js';
 import { mensajeAlert } from "../../auxiliares.js";
 
 window.onload = main;
@@ -78,7 +78,7 @@ function datatable()
             "decimal": "",
             "emptyTable": "No hay solicitudes",
             "info": "Mostrando _TOTAL_ solicitudes",
-            "infoEmpty": "Mostrando 0 to 0 of 0 Solicitudes",
+            "infoEmpty": "Mostrando 0 Solicitudes",
             "infoFiltered": "(Filtrado de _MAX_ total solicitudes)",
             "infoPostFix": "",
             "thousands": ",",
@@ -146,56 +146,37 @@ function obtener_data(tbody, tabla)
 
 }
 
-
+/**
+ * Esta funcion la usamos para hacer una petición al servidor y obtener un detallado de los días de vacaciones que solicito
+ * un colaborador, para mostrarlos en el modal.
+ *
+ *
+ *
+ * @param {array} data
+ */
 function llenarTablaSolicitudEmpleado(data)
 {
     document.getElementById('colaboradorModal').textContent = data.colaborador;
+
     const dataUser = {
         id:data.id
     }
 
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
-        },
-    });
+    let respuesta = peticionAsincrona('/colaboradores/getSolicitudUser' , 'POST' , dataUser );
 
-    $.ajax({
-        type: 'POST',
-        url: '/colaboradores/getSolicitudUser',
-        data: dataUser,
-        beforeSend: function (xhr) {
-            // Agregar cabeceras de seguridad
-            xhr.setRequestHeader("X-Content-Type-Options", "nosniff");
-            xhr.setRequestHeader("X-Frame-Options", "DENY");
-            xhr.setRequestHeader(
-                "Content-Security-Policy",
-                "default-src 'self'"
-            );
-        },
-        success: function(response)
-        {
-            const {data} = response;
-            let html = '';
+    respuesta.then(function(resultado){
+        const {data} = resultado;
+        let html = '';
 
-            data.forEach(element => {
-               html += `    <tr>
-               <th>${element.id}</th>
-               <td>${element.fecha}</td>
-               <th>${obtenerDia(element.dia)}</th>
-             </tr>`
-            });
+        data.forEach(element => {
+           html += `    <tr>
+           <th>${element.id}</th>
+           <td>${element.fecha}</td>
+           <th>${obtenerDia(element.dia)}</th>
+         </tr>`
+        });
 
-            document.getElementById('bodyTablaModal').innerHTML = html;
-        },
-
-        error: function(error)
-        {
-            console.log(error);
-            //mensajeAlert('error' , 'Ups!' , 'No pudimos actualizar el registro. Contacta a sistemas');
-        }
+        document.getElementById('bodyTablaModal').innerHTML = html;
     });
 }
 
@@ -278,5 +259,31 @@ function cerrarModalConfirmacion(id)
 function actualizarEstatus(id , url , modalId)
 {
     cerrarModalConfirmacion(modalId);
-    peticionActualizacionEstatus(id , url);
+
+    const data = {
+        id:id
+    }
+
+    let response = peticionAsincrona(url , 'POST' , data);
+
+    response.then(function(resultado){
+        Swal.fire({
+            title: 'Buen trabajo!',
+            text: resultado,
+            icon: 'success'
+          }).then(()=>{
+
+            if(document.getElementById('formRechazoSolicitud') !== null)
+            {
+                document.getElementById('formRechazoSolicitud').reset();
+            }
+
+            $("#tablaSolicitudes").DataTable().ajax.reload();
+
+          });
+    }).catch(function(error){
+
+        mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+
+    })
 }

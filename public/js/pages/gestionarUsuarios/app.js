@@ -1,4 +1,4 @@
-import {peticionUpdateUser , peticionEliminarUser , peticionAddUser , peticionChangeRole} from '../../ajax.js';
+import {peticionAsincrona , peticionChangeRole} from '../../ajax.js';
 import { mensajeAlert } from "../../auxiliares.js";
 window.onload = main;
 
@@ -185,7 +185,27 @@ function editUser()
         id:id
     }
 
-    peticionUpdateUser('/sistemas/update' , 'POST' , data);
+    let respuesta = peticionAsincrona('/sistemas/update' , 'POST' , data);
+
+    respuesta.then(function(resultado){
+
+        Swal.fire({
+            title: 'Buen trabajo!',
+            text: resultado,
+            icon: 'success'
+          }).then(()=>{
+
+            $('#editUserModal').modal('hide');
+
+            if(document.getElementById('formEditUser') !== null)
+            {
+                document.getElementById('formEditUser').reset();
+            }
+            $("#tablaUsuarios").DataTable().ajax.reload();
+          });
+    }).catch(function(error){
+        mensajeAlert('No pudimos procesar la solicitud!' , error.responseText , 'error');
+    });
 }
 
 
@@ -194,7 +214,21 @@ function eliminarUsuario(id)
     const data = {
         id:id
     }
-    peticionEliminarUser('/sistemas/delete' , 'POST' , data);
+
+    let respuesta = peticionAsincrona('/sistemas/delete' , 'POST' , data);
+
+    respuesta.then(function(resultado){
+        Swal.fire({
+            title: 'Buen trabajo!',
+            text: resultado,
+            icon: 'success'
+          }).then(()=>{
+            $("#tablaUsuarios").DataTable().ajax.reload();
+            $('#modalConfirmDeleteUser').modal('hide');
+          });
+    }).catch(function(error){
+        mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+    });
 }
 
 
@@ -233,7 +267,20 @@ function saveUser()
             role:role,
         }
 
-        peticionAddUser('/sistemas/create' , 'POST' , data);
+        let respuesta = peticionAsincrona('/sistemas/create' , 'POST' , data);
+
+        respuesta.then(function(resultado){
+            Swal.fire({
+                title: 'Buen trabajo!',
+                text: resultado,
+                icon: 'success'
+              }).then(()=>{
+                $("#tablaUsuarios").DataTable().ajax.reload();
+                $('#addUserModal').modal('hide');
+              });
+        }).catch(function(error){
+            mensajeAlert('¡No pudimos procesar la solicitud!' , error.responseText , 'error');
+        });
     }
 }
 

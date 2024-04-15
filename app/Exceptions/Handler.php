@@ -43,6 +43,8 @@ class Handler extends ExceptionHandler
             if ($exception->errorInfo[1] == 1062)
             {
                 return response('El correo ingresado ya existe!!', 500);
+            }else if($exception->errorInfo[1] == 1054){
+                return response('Tuvimos problemas en el servidor!!!', 500);
             }
         }
 

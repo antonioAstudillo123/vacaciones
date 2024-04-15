@@ -159,7 +159,7 @@ class RegistroVacaciones
                     $nombreEmpleado = Auth::user()->name;
                     $nombreJefe = $resultado->colaborador;
 
-                    Mail::to('antonioastudillo206@gmail.com')->queue(new CorreoSolicitud( $nombreJefe , $nombreEmpleado , $data['data']));
+                    //Mail::to('antonioastudillo206@gmail.com')->queue(new CorreoSolicitud( $nombreJefe , $nombreEmpleado , $data['data']));
 
                     DB::commit();
                 }

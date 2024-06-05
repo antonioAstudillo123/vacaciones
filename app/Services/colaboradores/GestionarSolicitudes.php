@@ -2,6 +2,7 @@
 
 namespace App\Services\colaboradores;
 
+use Exception;
 use App\Traits\Auxiliares;
 use App\Mail\RechazoSolicitud;
 use App\Mail\SolicitudAprobada;

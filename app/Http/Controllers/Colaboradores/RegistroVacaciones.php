@@ -3,29 +3,16 @@
 namespace App\Http\Controllers\Colaboradores;
 
 use Illuminate\Http\Request;
-use App\Mail\CorreoSolicitud;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use App\Services\colaboradores\RegistroVacaciones as RegistroVacacionesService;
 
 class RegistroVacaciones extends Controller
 {
-
-    private $tablaEmpleados;
-    private $tablaSolicitudes;
-    private $tablaSolicitudesDetalle;
     private $servicio;
 
 
     public function __construct( RegistroVacacionesService $servicio)
     {
-        $this->tablaEmpleados = 'empleados';
-        $this->tablaSolicitudes = 'solicitud_vacaciones';
-        $this->tablaSolicitudesDetalle = 'solicitud_vacaciones_detalle';
         $this->servicio = $servicio;
     }
 

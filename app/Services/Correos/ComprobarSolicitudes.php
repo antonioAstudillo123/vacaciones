@@ -43,7 +43,7 @@ use App\repositories\correos\SolicitudRepository;
                 ->select('e1.correo' , 'e2.colaborador as nombreEmpleado' , 'e1.colaborador as nombreJefe')
                 ->first();
 
-                Mail::to('antonio.astudillo@univer-gdl.edu.mx')->queue(new EnvioCorreoMail( $empleado->nombreJefe , $empleado->nombreEmpleado , Carbon::parse($registro->fechaInicio)->format('d/m/Y') ));
+                Mail::to('')->queue(new EnvioCorreoMail( $empleado->nombreJefe , $empleado->nombreEmpleado , Carbon::parse($registro->fechaInicio)->format('d/m/Y') ));
 
             }
 

@@ -90,7 +90,7 @@ class GestionarSolicitudes{
             $dias = $this->repositorio->getFechas($idSolicitud);
 
             //Enviamos un correo
-            Mail::to('antonioastudillo206@gmail.com')->queue(new SolicitudAprobada($empleado->colaborador , $dias[0]->fecha ,  $dias[count($dias)-1]->fecha ));
+            Mail::to('')->queue(new SolicitudAprobada($empleado->colaborador , $dias[0]->fecha ,  $dias[count($dias)-1]->fecha ));
             // Mail::to($empleado->correo)->queue(new SolicitudAprobada($empleado->colaborador , $dias[0]->fecha ,  $dias[count($dias)-1]->fecha ));
             DB::commit();
 

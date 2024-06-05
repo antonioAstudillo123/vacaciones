@@ -172,7 +172,7 @@ class GestionarUsuarios extends Controller
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         }catch(Exception $e){
-            Log::error('Error en método destroy ERROR 004 ' . $th->getMessage());
+            Log::error('Error en método destroy ERROR 004 ' . $e->getMessage());
             return response('Tuvimos problemas para eliminar al usuario Error:004 ' , 500);
         }
 
